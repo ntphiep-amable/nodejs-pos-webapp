@@ -1,0 +1,65 @@
+<h1>admin page</h1>
+
+<button class="" id="signoutBtn">đăng cmn xuất</button> <br>
+
+<button>đổi mật khẩu</button> <br>
+
+
+<br><br><br>
+
+<a href="/admin/products">quản lý sản phẩm</a> <br>
+
+<a href="/admin/stat">thống kê</a>
+
+
+<br> <br>
+
+<h2>danh sách nhân viên:</h2> <br>
+
+
+
+<table>
+    <thead>
+        <th>avatar</th>
+        <th>full name</th>
+        <th>email</th>
+        <th>active</th>
+        <th>locked</th>
+    </thead>
+    <tbody>
+        {{#each employeeList}}
+            <tr>
+                <td>{{avtImage}}</td>
+                <td><a href="/admin/e?m={{email}}">{{fullname}}</a></td>
+                <td>{{email}}</td>
+                <td>{{isActive}}</td>
+                <td>{{isLocked}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+
+<br><br>
+
+<div>
+    thêm nhân viên: <br>
+    <form class="addEmployee">
+
+        <label for="fullname">full name</label><br>
+        <input type="text" id="fullname" name="fullname" required><br>
+
+        <label for="email">email</label><br>
+        <input type="email" id="email" name="email" required><br>
+
+        <br>
+        <button type="submit">thêm</button>
+
+    </form>
+
+    <br>
+    <p class="message"></p>
+</div>
+
+<script src="/js/adminPage.js"></script>
