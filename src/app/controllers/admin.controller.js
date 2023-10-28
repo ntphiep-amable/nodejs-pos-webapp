@@ -49,6 +49,7 @@ class AdminController {
             return emplObj;
         });
 
+        console.log();
         res.render('pages/admin.home.hbs', { employeeList: empls });
     };
 

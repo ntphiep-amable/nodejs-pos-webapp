@@ -2,7 +2,7 @@ const isLogin = localStorage.getItem("user");
 
 console.log(isLogin);
 
-if (!isLogin) {
+if (!isLogin || isLogin !== 'admin' ) {
     window.location.href = '/login';
 }
 
@@ -13,34 +13,37 @@ document.querySelector('#signoutBtn').addEventListener('click', e => {
     window.location.href = '/';
 });
 
+document.querySelector('#name').innerHTML = isLogin;
+
+
 
 const addEmployeeForm = document.querySelector(".addEmployee");
-    addEmployeeForm.addEventListener("submit", async e => {
-        e.preventDefault();
+addEmployeeForm.addEventListener("submit", async e => {
+    e.preventDefault();
 
-        const fullname = document.querySelector("#fullname").value;
-        const email = document.querySelector("#email").value;
+    const fullname = document.querySelector("#fullname").value;
+    const email = document.querySelector("#email").value;
 
-        console.log(fullname);
-        console.log(email);
+    console.log(fullname);
+    console.log(email);
 
-        const response = await fetch("/admin", {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body : JSON.stringify({fullname, email})
-        });
+    const response = await fetch("/admin", {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body : JSON.stringify({fullname, email})
+    });
 
-        const data = await response.json();
-        console.log(data);
+    const data = await response.json();
+    console.log(data);
 
-        if(!data.status) {
-            // window.location.reload();
-            document.querySelector(".message").innerHTML = "thêm k thành công";
-        } else {
-            // save to stored
-            localStorage.setItem("user", data.data);
-            window.location.reload();
-        };
+    if(!data.status) {
+        // window.location.reload();
+        document.querySelector(".message").innerHTML = "thêm k thành công";
+    } else {
+        // save to stored
+        localStorage.setItem("empl", data.data);
+        window.location.reload();
+    };
 })

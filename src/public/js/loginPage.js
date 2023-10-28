@@ -20,8 +20,8 @@ loginForm.addEventListener('submit', async e => {
     const data = await response.json();
     
     if (data.status) {
-        localStorage.setItem("user", data.data);
-        console.log(data.data);
+        localStorage.setItem("user", data.data.username);
+        console.log(data.data.username);
 
         if (data.role === 'admin') {
             window.location.href = '/admin';
