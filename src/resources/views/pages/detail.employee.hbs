@@ -9,11 +9,15 @@
 
 
 
-<h1>quản lý nhân viên</h1>
+<h1>quản lý nhân viên</h1><br>
+<p>email: <i id="mail">{{email}}</i></p>
 
 
-<button>gửi link 1 phút</button> <br>
-<button>khóa mõm</button> <br>
+<button id="sendLink">gửi link 1 phút</button> <br><br>
+
+
+<p>trạng thái bị khóa: <i>{{isLocked}}</i> </p>
+<button id="lock">khóa mõm</button> <br>
 
 
 
@@ -25,3 +29,7 @@
 
 
 <h2>doanh số bán hàng của <i>{{fullname}}</i></h2>
+
+
+
+<script src="/js/detailEmployee.js"></script>

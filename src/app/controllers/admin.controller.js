@@ -205,7 +205,7 @@ class AdminController {
         const empl = await userModel.findOne({ email: req.query.m });
         console.log(empl.fullname);
 
-        res.render('pages/detail.employee.hbs', { fullname: empl.fullname });
+        res.render('pages/detail.employee.hbs', { fullname: empl.fullname, isLocked: empl.isLocked, email: empl.email });
     }
 }
 
