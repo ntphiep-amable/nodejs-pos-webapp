@@ -26,5 +26,8 @@ router.get('/p/update', adminController.passUpdate);
 // [POST] /admin/p/update
 router.post('/p/update', adminController.passC);
 
+// [POST] /admin/l/employee
+router.post('/l/employee', adminController.lockEmpl)
+
 
 module.exports = router;

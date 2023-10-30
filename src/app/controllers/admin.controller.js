@@ -203,9 +203,46 @@ class AdminController {
     // [GET] /admin/e/:m
     detailEmpl = async (req, res) => {
         const empl = await userModel.findOne({ email: req.query.m });
+        console.log(req.query.m);
         console.log(empl.fullname);
 
-        res.render('pages/detail.employee.hbs', { fullname: empl.fullname, isLocked: empl.isLocked, email: empl.email });
+        const btnMes = empl.isLocked ? "mở khóa" : "khóa mỗm";
+
+        res.render('pages/detail.employee.hbs', { fullname: empl.fullname, isLocked: empl.isLocked, email: empl.email, btnMes:btnMes});
+    }
+
+
+    // [POST] /admin/l/employee
+    lockEmpl = async (req, res) => {
+        const userCheck = await userModel.findOne({ email: req.body.mail });
+        if (!userCheck.isLocked) {
+            await userModel.updateOne({ email: req.body.mail }, { isLocked: true }).then(() => {
+                const isLocked = userCheck.isLocked;
+                console.log('ok');
+                console.log(isLocked);
+                
+                return res.json({
+                    status: true,
+                    message: "thực hiện thành công",
+                    data: { isLocked }
+                })
+            });
+
+        } else {
+            await userModel.updateOne({ email: req.body.mail }, { isLocked: false }).then(() => {
+                const isLocked = userCheck.isLocked;
+                console.log('ok');
+                console.log(isLocked);
+                
+                return res.json({
+                    status: true,
+                    message: "thực hiện thành công",
+                    data: { isLocked }
+                })
+            });
+        }
+
+        
     }
 }
 

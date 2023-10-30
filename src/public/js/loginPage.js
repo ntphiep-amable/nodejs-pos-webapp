@@ -15,6 +15,7 @@ loginForm.addEventListener('submit', async e => {
     });
 
     const data = await response.json();
+    console.log(data.data);
     
     if (data.status) {
         localStorage.setItem("username", data.data.username);
