@@ -19,5 +19,8 @@
 
 
 <script>
+    if (localStorage.getItem("role") !== "employee" || !localStorage.getItem("username")) {
+        window.location.href = '/login';
+    }
     document.querySelector('#name').innerHTML =  localStorage.getItem("user");
 </script>
