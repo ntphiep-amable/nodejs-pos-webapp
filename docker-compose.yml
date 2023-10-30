@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=point_of_sale
+    volumes:
+      - db:/data/db
+
+volumes:
+  db:
