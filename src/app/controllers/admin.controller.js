@@ -148,10 +148,57 @@ class AdminController {
         res.render('pages/admin.stat.hbs');
     }
 
-    // [GET] 
+    // [GET] /admin/p/update
     passUpdate = async (req, res) => {
         res.render('pages/changePass.hbs');
     }
+
+    // [POST] /admin/p/update
+    passC = async (req, res) => {
+        try {
+            const {username, oldPass, newPass, reNewPass} = req.body;
+            const userCheck = await userModel.findOne({ username: username });
+            console.log(oldPass);
+
+            if (!(await bcrypt.compare(oldPass, userCheck.password))) {
+                return res.json({
+                    status: false,
+                    message: "sai pass cũ",
+                    data: {},
+                });
+            }
+
+            else if (oldPass === newPass) {
+                return res.json({
+                    status: false,
+                    message: "pass cũ và mới phải khác nhau",
+                    data: {},
+                });
+            }
+
+            else if (newPass !== reNewPass) {
+                return res.json({
+                    status: false,
+                    message: "nhập lại pass đúng",
+                    data: {},
+                });
+            };
+
+            const hashedPassword = await bcrypt.hash(newPass, 10);
+            await userModel.updateOne({ username: username }, { password: hashedPassword }).then(() => {
+                return res.json({
+                    status: true,
+                    message: "đã đổi pass",
+                    data: {},
+                });
+            })
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 
     // [GET] /admin/e/:m
     detailEmpl = async (req, res) => {

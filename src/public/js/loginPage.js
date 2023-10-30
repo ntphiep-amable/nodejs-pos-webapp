@@ -2,7 +2,6 @@ const loginForm = document.querySelector('.loginForm');
 loginForm.addEventListener('submit', async e => {
     e.preventDefault();
 
-
     const username = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
 
@@ -11,17 +10,17 @@ loginForm.addEventListener('submit', async e => {
 
     const response = await fetch('/login', {
         method: 'post',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({username, password})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({username, password}),
     });
 
     const data = await response.json();
     
     if (data.status) {
-        localStorage.setItem("user", data.data.role);
-        console.log(data.data.username);
+        localStorage.setItem("username", data.data.username);
+        localStorage.setItem("fullname", data.data.fullname);
+        localStorage.setItem("role", data.data.role);
+        console.log(localStorage.getItem("username"));
 
         if (data.role === 'admin') {
             window.location.href = '/admin';

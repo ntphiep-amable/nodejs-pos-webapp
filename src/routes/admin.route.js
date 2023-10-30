@@ -23,5 +23,8 @@ router.get('/e', adminController.detailEmpl);
 // [GET] /admin/p/update
 router.get('/p/update', adminController.passUpdate);
 
+// [POST] /admin/p/update
+router.post('/p/update', adminController.passC);
+
 
 module.exports = router;

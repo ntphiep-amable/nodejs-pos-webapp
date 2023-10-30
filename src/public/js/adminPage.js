@@ -1,8 +1,8 @@
-const isLogin = localStorage.getItem("user");
+const isLogin = localStorage.getItem("username");
 
 console.log(isLogin);
 
-if (!isLogin || isLogin !== 'admin' ) {
+if (!isLogin || localStorage.getItem("role") !== "admin") {  
     window.location.href = '/login';
 }
 
@@ -23,7 +23,7 @@ document.querySelector('#changePass').addEventListener('click', async e => {
 
 
 
-document.querySelector('#name').innerHTML = isLogin;
+document.querySelector('#name').innerHTML = localStorage.getItem("fullname");
 
 
 

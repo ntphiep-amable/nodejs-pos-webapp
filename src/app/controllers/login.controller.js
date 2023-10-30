@@ -78,10 +78,12 @@ class LoginController {
             // role check
             if (userCheck.role === 'admin') {
                 console.log('dung la admin roi');
+                const fullname = userCheck.fullname;
+                const role = userCheck.role;
                 return res.json({
                     status: true,
                     role: 'admin',
-                    data: {username, password, role}
+                    data: {fullname, username, role}
                 })
             } else {
                 console.log('nhan vien quen');
@@ -89,10 +91,12 @@ class LoginController {
                 // check if login with link in email
                 if (userCheck.emailConfirmed ) {
                     console.log('ok employee');
+                    const fullname = userCheck.fullname;
+                    const role = userCheck.role;
                     return res.json({
                         status: true,
                         role: 'employee',
-                        data: {username, password, role}
+                        data: {fullname, username, role}
                     });
 
                 } else {
