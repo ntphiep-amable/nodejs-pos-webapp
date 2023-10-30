@@ -20,7 +20,7 @@ loginForm.addEventListener('submit', async e => {
     const data = await response.json();
     
     if (data.status) {
-        localStorage.setItem("user", data.data.username);
+        localStorage.setItem("user", data.data.role);
         console.log(data.data.username);
 
         if (data.role === 'admin') {

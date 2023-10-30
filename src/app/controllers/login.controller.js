@@ -30,7 +30,7 @@ class LoginController {
 
             userModel.create({
                 fullname: 'Nguyen Hiep',
-                username: 'admin',
+                username: 'deptrai',
                 email: 'deptrai@gmail.com',
                 password: await bcrypt.hash('nguyenhiep', 10),
                 role: 'admin',
@@ -81,7 +81,7 @@ class LoginController {
                 return res.json({
                     status: true,
                     role: 'admin',
-                    data: {username, password}
+                    data: {username, password, role}
                 })
             } else {
                 console.log('nhan vien quen');
@@ -92,7 +92,7 @@ class LoginController {
                     return res.json({
                         status: true,
                         role: 'employee',
-                        data: {username, password}
+                        data: {username, password, role}
                     });
 
                 } else {
