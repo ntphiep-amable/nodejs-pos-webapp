@@ -13,6 +13,16 @@ document.querySelector('#signoutBtn').addEventListener('click', e => {
     window.location.href = '/';
 });
 
+
+document.querySelector('#changePass').addEventListener('click', async e => {
+    e.preventDefault();
+    window.location.href = 'admin/p/update'
+    //console.log('check');
+});
+
+
+
+
 document.querySelector('#name').innerHTML = isLogin;
 
 
@@ -29,10 +39,8 @@ addEmployeeForm.addEventListener("submit", async e => {
 
     const response = await fetch("/admin", {
         method: "post",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body : JSON.stringify({fullname, email})
+        headers: { "Content-Type": "application/json" },
+        body : JSON.stringify({fullname, email}),
     });
 
     const data = await response.json();

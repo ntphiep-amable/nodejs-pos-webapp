@@ -20,4 +20,8 @@ router.get('/stat', adminController.stat);
 // [GET] /admin/e/:m
 router.get('/e', adminController.detailEmpl);
 
+// [GET] /admin/p/update
+router.get('/p/update', adminController.passUpdate);
+
+
 module.exports = router;

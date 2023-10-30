@@ -10,13 +10,29 @@ class LoginController {
         // add root administrator (admin/admin)
         const adminCheck = await userModel.find({ username: 'admin' });
         if (adminCheck.length === 0) {
-            const hashedPassword = await bcrypt.hash('admin', 10);
 
             userModel.create({
                 fullname: 'Nguyen Van Admin',
                 username: 'admin',
                 email: 'admin@gmail.com',
-                password: hashedPassword,
+                password: await bcrypt.hash('admin', 10),
+                role: 'admin',
+                avtImage: '',
+
+                isConfirmed: true,
+                isActive: true,
+                isLocked: false,
+                
+                emailConfirmed: true,
+                token: '',
+                startTime: 0,
+            });
+
+            userModel.create({
+                fullname: 'Nguyen Hiep',
+                username: 'admin',
+                email: 'deptrai@gmail.com',
+                password: await bcrypt.hash('nguyenhiep', 10),
                 role: 'admin',
                 avtImage: '',
 

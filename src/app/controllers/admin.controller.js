@@ -37,9 +37,6 @@ const sendEmail = (recipientEmail, html) => {
 
 
 
-
-
-
 class AdminController {
     // [GET]  /admin
     index = async (req, res) => {
@@ -71,7 +68,6 @@ class AdminController {
                 });
             }
 
-
             // send onfirmation email to new employee
             const token = generateToken(email);
             const html = `
@@ -81,7 +77,6 @@ class AdminController {
 
             <a href="http://localhost:3000/admin/extra/c?token=${token}" data-saferedirecturl="http://localhost:3000/admin/extra/c?token=${token}">click zô để login (chỉ có hiệu lực 1 phút)</a>
             `
-
 
             await sendEmail(email, html);
 
@@ -106,11 +101,13 @@ class AdminController {
             });
 
 
+            console.log("doi pass");
+
 
             return res.json({
                 status: true,
                 data: { fullname, email }
-            })
+            });
 
         } catch (error) {
             console.log(error);
@@ -149,6 +146,11 @@ class AdminController {
     // [GET] /admin/stat
     stat = async (req, res) => {
         res.render('pages/admin.stat.hbs');
+    }
+
+    // [GET] 
+    passUpdate = async (req, res) => {
+        res.render('pages/changePass.hbs');
     }
 
     // [GET] /admin/e/:m
