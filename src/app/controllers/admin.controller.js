@@ -96,12 +96,9 @@ class AdminController {
                 isLocked: false,
                 
                 emailConfirmed: false,
-                token: token,
+                token: generateToken(email),
                 startTime: new Date().getTime(),
             });
-
-
-            console.log("doi pass");
 
 
             return res.json({

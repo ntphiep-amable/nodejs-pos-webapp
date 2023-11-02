@@ -6,21 +6,21 @@
 
 <br>
 
-<button class="" id="signoutBtn">đăng cmn xuất</button> <br>
+<button class="" id="signoutBtn">đăng cmn xuất</button> <br> <br> <br>
 
-<button>đổi mật khẩu</button> <br>
+<p id="changePassMess"></p>
+<button id="changePass">đổi mật khẩu</button> <br>
 
 
 <br><br><br>
 
+<div id="feature">
+    <h2>danh sách hàng hóa:</h2>
 
-<h2>danh sách hàng hóa:</h2>
+</div>
 
 
 
-<script>
-    if (localStorage.getItem("role") !== "employee" || !localStorage.getItem("username")) {
-        window.location.href = '/login';
-    }
-    document.querySelector('#name').innerHTML =  localStorage.getItem("user");
-</script>
+
+
+<script src="/js/employeePage.js"></script>
