@@ -14,6 +14,10 @@ document.querySelector('#changePass').addEventListener('click', async e => {
     window.location.href = 'employee/p/update';
 });
 
+document.querySelector('#changeAvt').addEventListener('click', async e => {
+    e.preventDefault();
+    window.location.href = 'employee/avt/update';
+});
 
 
 async function hmm () {

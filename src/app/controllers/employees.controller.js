@@ -96,8 +96,17 @@ class EmployeesController {
         } catch (error) {
             console.log(error);
         }
+    }
 
-        
+
+    // [GET] /employee/avt/update
+    avtUpdate = async (req, res) => {
+        res.render('pages/changeAvatar.hbs');
+    }
+
+    // [POST] /employee/avt/update
+    avtC = async (req, res) => {
+        console.log("doi anh");
     }
 }
 

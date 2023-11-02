@@ -19,4 +19,16 @@ router.get('/p/update', employeesController.passUpdate);
 // [POST] /employee/p/update
 router.post('/p/update', employeesController.passC);
 
+
+
+
+// [GET] /employee/avt/update
+router.get('/avt/update', employeesController.avtUpdate);
+
+
+// [POST] /employee/avt/update
+router.post('/avt/update', employeesController.avtC)
+
+
+
 module.exports = router;
