@@ -7,7 +7,15 @@ function generateToken(email) {
     return crypto.createHash('sha256').update(email).digest('hex');
 }
 
-const sendEmail = (recipientEmail, html) => {
+const sendEmail = (recipientEmail, name) => {
+    const html = `
+    <h1>xin chào ${name}</h1>
+
+    <b>bạn là nhân viên mới</b> <br>
+
+    <a href="http://localhost:3000/admin/extra/c?token=${generateToken(recipientEmail)}" data-saferedirecturl="http://localhost:3000/admin/extra/c?token=${generateToken(recipientEmail)}">click zô để login (chỉ có hiệu lực 1 phút)</a>
+    `
+
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         host: 'smtp.gmail.com',
@@ -34,6 +42,8 @@ const sendEmail = (recipientEmail, html) => {
         }
     });
 };
+
+
 
 
 
@@ -69,17 +79,7 @@ class AdminController {
             }
 
             // send onfirmation email to new employee
-            const token = generateToken(email);
-            const html = `
-            <h1>xin chào ${fullname}</h1>
-
-            <b>bạn là nhân viên mới</b> <br>
-
-            <a href="http://localhost:3000/admin/extra/c?token=${token}" data-saferedirecturl="http://localhost:3000/admin/extra/c?token=${token}">click zô để login (chỉ có hiệu lực 1 phút)</a>
-            `
-
-            await sendEmail(email, html);
-
+            await sendEmail(email, fullname);
             
             // add new employee to db
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -242,8 +242,34 @@ class AdminController {
             });
         }
 
-        
     }
+
+
+    // [POST] /admin/send/employee
+    sendMail = async (req, res) => {
+        try {
+            const fullname = await userModel.findOne({ email: req.body.mail }).fullname;
+            await userModel.updateOne({ email: req.body.mail }, { startTime: new Date().getTime() }).then(() => {                
+                sendEmail(req.body.mail, fullname);
+
+                return res.json({
+                    status: true,
+                    message: "gửi mail thành công",
+                    data: { }
+                })
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.json({
+                status: false,
+                message: "k gửi đc",
+                data: {  }
+            });
+        }        
+    }
+        
+    
 }
 
 module.exports = new AdminController();

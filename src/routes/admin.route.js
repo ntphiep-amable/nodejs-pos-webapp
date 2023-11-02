@@ -29,5 +29,7 @@ router.post('/p/update', adminController.passC);
 // [POST] /admin/l/employee
 router.post('/l/employee', adminController.lockEmpl)
 
+// [POST] /admin/send/employee
+router.post('/send/employee', adminController.sendMail);
 
 module.exports = router;
