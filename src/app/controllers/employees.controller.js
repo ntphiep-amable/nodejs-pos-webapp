@@ -28,7 +28,17 @@ class EmployeesController {
                     message: "bạn là nhân viên mới, vui lòng đổi mật khẩu",
                     data: { }
                 }) 
-            } else {
+            }
+
+            else if (userCheck.isLocked) {
+                return res.json({
+                    status: false,
+                    message: "bạn đã bị admin khóa mõm",
+                    data: { }
+                })  
+            }
+
+            else {
                 return res.json({
                     status: true,
                     message: "",
