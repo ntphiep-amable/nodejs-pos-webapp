@@ -9,12 +9,10 @@ const userSchema = new Schema({
     role: String,
     avtImage: String,
 
-
     isConfirmed: Boolean,
     isActive: Boolean,
     isLocked: Boolean,
 
-    
     emailConfirmed: Boolean,
     token: String,
     startTime: Number,

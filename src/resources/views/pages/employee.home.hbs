@@ -23,11 +23,38 @@
     <a href="/employee/stat">thống kê</a> <br> <br>
 
 
-    <h2>danh sách hàng hóa:</h2>
+  
 
 
 
 </div>
+
+<h2>danh sách hàng hóa:</h2>
+
+
+
+
+<table>
+    <thead>
+        <th>barcode</th>
+        <th>name</th>
+        <th>retail price</th>
+        <th>category</th>
+        <th>creation date</th>
+    </thead>
+    <tbody>
+        {{#each productList}}
+            <tr>
+                <td><img src="{{barcodeImg}}" alt=""></td>
+                <td><a href="">{{name}}</a></td>
+                <td>${{retailPrice}}</td>
+                <td>{{category}}</td>
+                <td>{{creationDate}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
 
 
 

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../app/controllers/admin.controller');
+const productsController = require('../app/controllers/products.controller');
+
 
 // [GET] /admin
 router.get('/', adminController.index);
@@ -12,7 +14,11 @@ router.post('/', adminController.addEmpl);
 router.get('/extra/:c', adminController.extra);
 
 // [GET] /admin/products
-router.get('/products', adminController.productList);
+router.get('/products', productsController.index);
+
+// [POST] /admin/products
+router.post('/products', productsController.addPrd);
+
 
 // [GET] /admin/stat
 router.get('/stat', adminController.stat);

@@ -1,13 +1,84 @@
-<h1>admin page</h1>
+<h1>admin page</h1><br>
+
+<div>
+    <h2>xin chào <p id="name"></p></h2>
+</div>
+
+<br>
 
 <button class="" id="signoutBtn">đăng cmn xuất</button> <br>
 
-<button>đổi mật khẩu</button> <br>
+<button class="" id="changePass">đổi mật khẩu</button> <br>
 
 
 <br><br><br>
 
 
+<div>
+    <b>thêm sản phẩm:</b> <br>
+    <form class="addPrd">
+
+        <label for="pname">tên sản phẩm</label><br>
+        <input type="text" id="pname" name="pname" required><br>
+
+        <label for="importPrice">giá nhập</label><br>
+        <input type="text" id="importPrice" name="importPrice" required><br>
+
+        <label for="retailPrice">giá bán</label><br>
+        <input type="text" id="retailPrice" name="retailPrice" required><br>
+
+        <label for="category">loại hàng</label><br>
+        <input type="text" id="category" name="category" required><br>
+        
+
+        <label for="imagePrd">upload ảnh</label> <br>  
+        <input type="file" id="imagePrd" name="imagePrd" value=""> <br><br>
 
 
-<h2>danh sách sản phẩm:</h2>
+
+        <br>
+        <button type="submit">thêm</button>
+
+    </form>
+
+    <br>
+    <p class="message"></p>
+</div>
+
+<br> <br> 
+<h2>danh sách sản phẩm:</h2> <br>
+
+
+
+<table>
+    <thead>
+        <th>barcode</th>
+        <th>name</th>
+        <th>import price</th>
+        <th>retail price</th>
+        <th>category</th>
+        <th>creation date</th>
+    </thead>
+    <tbody>
+        {{#each productList}}
+            <tr>
+                <td><img src="{{barcodeImg}}" alt=""></td>
+                <td><a href="">{{name}}</a></td>
+                <td>${{importPrice}}</td>
+                <td>${{retailPrice}}</td>
+                <td>{{category}}</td>
+                <td>{{creationDate}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<script src="/js/adminProduct.js"></script>

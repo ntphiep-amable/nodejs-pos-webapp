@@ -2,8 +2,6 @@ const loginRouter = require('./login.route');
 const adminRouter = require('./admin.route');
 const employeesRouter = require('./employees.route');
 
-
-
 const route = (app) => {
     app.use('/login', loginRouter);
     app.use('/admin', adminRouter);

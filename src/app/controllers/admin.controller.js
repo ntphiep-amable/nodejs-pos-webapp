@@ -2,6 +2,10 @@ const userModel = require("../models/users.model");
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+// const { createCanvas } = require('canvas');
+// const fs = require('fs');
+// const path = require('path');
+
 
 function generateToken(email) {
     return crypto.createHash('sha256').update(email).digest('hex');
@@ -61,7 +65,7 @@ class AdminController {
     };
 
 
-    // [POST] /admin
+    // [POST] /admin            // add employee
     addEmpl = async (req, res) => {
         try {
             const {fullname, email} = req.body;
@@ -134,11 +138,6 @@ class AdminController {
         }
     }
 
-
-    // [GET] /admin/products
-    productList = async (req, res) => {
-        res.render('pages/admin.products.hbs');
-    }
 
     // [GET] /admin/stat
     stat = async (req, res) => {
