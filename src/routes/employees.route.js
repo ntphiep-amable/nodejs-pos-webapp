@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const employeesController = require('../app/controllers/employees.controller');
+const orderController = require('../app/controllers/order.controller')
 
 // [GET] /employee
 router.get('/', employeesController.index);
@@ -28,6 +29,9 @@ router.get('/avt/update', employeesController.avtUpdate);
 
 // [POST] /employee/avt/update
 router.post('/avt/update', employeesController.avtC)
+
+
+router.get('/order', orderController.index);
 
 
 
