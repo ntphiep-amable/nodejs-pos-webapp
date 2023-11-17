@@ -43,8 +43,8 @@ class ProductController {
         const newProduct = new productModel({
             name: pname,
             barcodeImg: '',
-            importPrice: retailPrice,
-            retailPrice: importPrice,
+            importPrice: importPrice,
+            retailPrice: retailPrice,
             category: category, 
             creationDate: new Date(), 
             beenPurchased: false,
@@ -100,7 +100,50 @@ class ProductController {
 
     // [POST] /admin/products/update
     postUpdate = async (req, res) => {
-        
+        const prdID = req.body._id;
+        // const newName = req.body.pname;
+        // const newImp = req.body.importPrice;
+        // const newRet = req.body.retailPrice;
+        // const newCat = req.body.category;
+
+        const newData = {
+            name: req.body.pname,
+            importPrice: req.body.importPrice,
+            retailPrice:  req.body.retailPrice,
+            category: req.body.category,
+        }
+
+        await productModel.updateOne({ _id: prdID}, newData).then(() => {
+            return res.json({
+                status: true,
+                message: "update thành công",
+                data: { }
+            })
+        })
+    }
+
+
+    // [DELETE]
+    delPrd = async (req, res) => {
+        const prdID = req.params.id;
+
+        try {
+            const delPrd = await productModel.findByIdAndDelete(prdID);
+            if (!delPrd) {
+                return res.status(404).json({ message: 'k tìm thấy sản phẩm' });
+            }
+          
+              // Trả về phản hồi cho client-side
+              return res.json({
+                status: true,
+                message: "xóa thành công",
+                data: { }
+            });
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
     }
 }
 

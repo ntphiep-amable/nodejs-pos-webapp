@@ -45,4 +45,10 @@ router.get('/products/update', productsController.getUpdate);
 router.post('/products/update/e', productsController.thisPrd);
 
 
+router.post('/products/update', productsController.postUpdate);
+
+
+
+router.delete('/products/del/:id', productsController.delPrd);
+
 module.exports = router;

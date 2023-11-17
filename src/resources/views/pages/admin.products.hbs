@@ -68,7 +68,11 @@
                 <td>${{retailPrice}}</td>
                 <td>{{category}}</td>
                 <td>{{creationDate}}</td>
-                <td><button>delete</button></td>
+                {{#if beenPurchased}}
+                    <td><button disabled>delete</button></td>
+                {{else}}
+                    <td><button class="deletePrd" id="{{_id}}">delete</button></td>
+                {{/if}}
                 <td><button class="updatePrd" id="{{_id}}">update</button></td>
             </tr>
         {{/each}}

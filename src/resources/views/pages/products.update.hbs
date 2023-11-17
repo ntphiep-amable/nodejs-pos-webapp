@@ -41,6 +41,31 @@
     localStorage.removeItem('cat');
     // code rất ngu, người đọc thông cảm
 
+   
+
+
+    document.querySelector("#updatePrd").addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const pname = document.querySelector("#pname").value;
+        const importPrice = document.querySelector("#importPrice").value;
+        const retailPrice = document.querySelector("#retailPrice").value;
+        const category = document.querySelector("#category").value;
+        const _id = localStorage.getItem('_id');
+
+        localStorage.removeItem('_id');
+
+        const response = await fetch("/admin/products/update", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({_id, pname, importPrice, retailPrice, category}),
+        });
+
+        const data = await response.json();
+        if (data.status) {
+            window.location.href = "/admin/products";
+        }
+    })
 
     
 </script>

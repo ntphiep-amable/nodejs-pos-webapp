@@ -30,10 +30,6 @@ addEmployeeForm.addEventListener("submit", async e => {
 })
 
 const updateBtns = document.querySelectorAll(".updatePrd");
-// updateBtns.forEach(function(button) {
-//     button.addEventListener('click', liste)
-// })
-
 for (let i = 0; i < updateBtns.length; i++) {
     let thisBtn = updateBtns[i];
     thisBtn.addEventListener('click', async e => {
@@ -48,6 +44,7 @@ for (let i = 0; i < updateBtns.length; i++) {
         const data = await response.json();
         console.log(data.data);
 
+        localStorage.setItem('_id', prdID);
         localStorage.setItem('name', data.data.name);
         localStorage.setItem('imp', data.data.imp);
         localStorage.setItem('ret', data.data.ret);
@@ -56,4 +53,23 @@ for (let i = 0; i < updateBtns.length; i++) {
 
         window.location.href = '/admin/products/update'
     })    
+}
+
+const delBtns = document.querySelectorAll(".deletePrd");
+for (let i = 0; i < delBtns.length; i++) {
+    let thisBtn = delBtns[i];
+    thisBtn.addEventListener('click', async e => {
+        const prdID = thisBtn.id;
+
+        const response = await fetch(`/admin/products/del/${prdID}`, {
+            method: "delete",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({prdID}),
+        });
+
+        const data = await response.json();
+        if (data.status) {
+            window.location.reload();
+        }
+    })
 }
