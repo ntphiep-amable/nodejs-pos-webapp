@@ -18,7 +18,7 @@ function genBarcode(code) {
     const buffer = canvas.toBuffer('image/png');
     const srcPath = path.resolve(__dirname, '../..');
     console.log(srcPath);
-    fs.writeFileSync(srcPath + `/public/images/${code}.png`, buffer);
+    fs.writeFileSync(srcPath + `/public/images/barcode/${code}.png`, buffer);
 }
 
 class ProductController {
@@ -55,7 +55,7 @@ class ProductController {
             const result = await newProduct.save();
             const objectID = result._id;
             // console.log(objectID);
-            const barcodeImgPath = `/images/${objectID}.png`;
+            const barcodeImgPath = `/images/barcode/${objectID}.png`;
 
             await productModel.updateOne({ _id: objectID }, { barcodeImg: barcodeImgPath });
             genBarcode(objectID);
