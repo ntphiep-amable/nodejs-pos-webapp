@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const employeesController = require('../app/controllers/employees.controller');
-const orderController = require('../app/controllers/order.controller')
+const checkoutController = require('../app/controllers/checkout.controller')
 
 // [GET] /employee
 router.get('/', employeesController.index);
@@ -31,7 +31,9 @@ router.get('/avt/update', employeesController.avtUpdate);
 router.post('/avt/update', employeesController.avtC)
 
 
-router.get('/order', orderController.index);
+router.get('/checkout', checkoutController.index);
+
+router.post('/checkout', checkoutController.findCtm);
 
 
 

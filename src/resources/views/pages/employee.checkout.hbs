@@ -1,3 +1,40 @@
 <h1>employee page</h1><br>
 
+<div>
+    <h2>xin chào <p id="name"></p></h2>
+</div> <br>
+
+<h2>đơn hàng hiện tại</h2> <br> <br>
+
+
+<form class="customerInfo">
+    <label for="phone">nhập số điện thoại khách</label><br>
+    <input type="text" id="phone" name="phone" required>
+
+    <br><br>
+    <button type="submit">tìm</button>
+</form>
+
+
+<br> <br>
+<div>
+    <h3>thông tin khách hàng</h3>
+</div>
+
+<script>
+    const findCustomer = document.querySelector(".customerInfo");
+    findCustomer.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const phoneNum = document.querySelector("#phone").value;
+
+        const response = await fetch('/employee/checkout', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({phoneNum}),
+        });
+
+        const data = await response.json();
+    })
+</script>
 
