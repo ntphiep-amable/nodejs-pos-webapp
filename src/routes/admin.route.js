@@ -38,4 +38,11 @@ router.post('/l/employee', adminController.lockEmpl)
 // [POST] /admin/send/employee
 router.post('/send/employee', adminController.sendMail);
 
+
+router.get('/products/update', productsController.getUpdate);
+
+
+router.post('/products/update/e', productsController.thisPrd);
+
+
 module.exports = router;

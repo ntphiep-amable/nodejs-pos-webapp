@@ -73,6 +73,35 @@ class ProductController {
         
     }
 
+    // [POST] /admin/products/e
+    thisPrd = async (req, res) => {
+        console.log(req.body);
+        const prdCheck = await productModel.findOne({ _id: req.body.prdID });
+
+        const name = prdCheck.name;
+        const imp = prdCheck.importPrice;
+        const ret = prdCheck.retailPrice;
+        const cat = prdCheck.category;
+
+
+        return res.json({
+            status: true,
+            message: "lấy ok",
+            data: { name, imp, ret, cat }
+        });
+    }
+
+
+    // [GET] /admin/products/update
+    getUpdate = async (req, res) => {
+        res.render('pages/products.update.hbs')
+    }
+
+
+    // [POST] /admin/products/update
+    postUpdate = async (req, res) => {
+        
+    }
 }
 
 
