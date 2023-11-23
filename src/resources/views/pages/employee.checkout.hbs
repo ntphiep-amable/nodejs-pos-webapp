@@ -25,7 +25,7 @@
         <div id="addCus">
   
         </div>
-            
+
     
 </div>
 
@@ -85,8 +85,31 @@
                     body : JSON.stringify({ fullname, address, phoneNum }),
                 });
 
-                const data = await response.json();
-            })
+                const dataa = await response.json();
+
+                if (dataa.status) {
+                    addCustomer.innerHTML = `
+                        <table>
+                            <thead>
+                                <th>fullname</th>
+                                <th>address</th>
+                                <th>phone number</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${fullname}</td>
+                                    <td>${address}</td>
+                                    <td>${phoneNum}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `
+                }
+            });
+
+
+
+        
 
 
         } else {

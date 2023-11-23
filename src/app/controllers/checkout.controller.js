@@ -29,7 +29,7 @@ class CheckoutController {
 
             return res.json({
                 status: true,
-                message: "k tim thay khach hang nay",
+                message: "ok man",
                 data: { fullname, address, phoneNum },
             });
         }
