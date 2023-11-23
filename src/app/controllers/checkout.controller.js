@@ -17,8 +17,42 @@ class CheckoutController {
 
         const customerCheck = await customerModel.findOne({ phoneNumber: phoneNum });
         
+        if (!customerCheck) {
+            return res.json({
+                status: false,
+                message: "k tim thay khach hang nay",
+                data: {},
+            });
+        } else {
+            const fullname = customerCheck.fullname;
+            const address = customerCheck.address;
+
+            return res.json({
+                status: true,
+                message: "k tim thay khach hang nay",
+                data: { fullname, address, phoneNum },
+            });
+        }
     };
 
+
+    addCus = async (req, res) => {
+        const { fullname, address, phoneNum } = req.body;
+        // console.log(req.body);
+        
+        customerModel.create({
+            fullname: fullname,
+            address: address,
+            phoneNumber: phoneNum,
+        });
+
+        return res.json({
+            status: true,
+            message: "them khach hang thanh cong",
+            data: { fullname, address, phoneNum },
+        });
+
+    }
 }
 
 

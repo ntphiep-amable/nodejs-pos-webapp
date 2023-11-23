@@ -19,9 +19,28 @@
 <br> <br>
 <div>
     <h3>thông tin khách hàng</h3>
+
+
+
+        <div id="addCus">
+  
+        </div>
+            
+    
 </div>
 
+
+
+
+
+
+
+
 <script>
+    const addCustomer = document.querySelector("#addCus");
+
+
+
     const findCustomer = document.querySelector(".customerInfo");
     findCustomer.addEventListener('submit', async e => {
         e.preventDefault();
@@ -35,6 +54,69 @@
         });
 
         const data = await response.json();
+        console.log(data.data);
+
+        if (!data.status) {
+            addCustomer.innerHTML = `
+                <div id="addCus">
+                    <p>khong thay thong tin khach hang, tao khach hang moi</p> <br>
+
+                    <form class="addCus">
+                        <label for="fullname">ho ten khach</label><br>
+                        <input type="text" id="fullname" name="fullname" required> <br>
+
+                        <label for="address">dia chi</label><br>
+                        <input type="text" id="address" name="address" required> <br> <br>
+
+                        <button type="submit">them</button> 
+                    </form>
+                </div>
+            `
+            
+            document.querySelector(".addCus").addEventListener('submit', async e => {
+                e.preventDefault();
+
+                const fullname = document.querySelector("#fullname").value;
+                const address = document.querySelector("#address").value;
+
+                const response = await fetch('/employee/checkout/add', {
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    body : JSON.stringify({ fullname, address, phoneNum }),
+                });
+
+                const data = await response.json();
+            })
+
+
+        } else {
+            addCustomer.innerHTML = `
+                <table>
+                    <thead>
+                        <th>fullname</th>
+                        <th>address</th>
+                        <th>phone number</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="fn"></td>
+                            <td id="ad"></td>
+                            <td id="pn"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `
+
+            document.querySelector("#fn").innerHTML = data.data.fullname;
+            document.querySelector("#ad").innerHTML = data.data.address;
+            document.querySelector("#pn").innerHTML = data.data.phoneNum;
+        }
+
+
     })
+
+    
+
+    
 </script>
 

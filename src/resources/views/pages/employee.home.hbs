@@ -13,7 +13,7 @@
 
 <p id="changePassMess"></p>
 <button id="changePass">đổi mật khẩu</button> <br>
-
+    
 
 <br><br><br>
 
@@ -24,34 +24,38 @@
   
 
 
+    <h2>danh sách hàng hóa:</h2>
+
+
+
+
+    <table>
+        <thead>
+            <th>barcode</th>
+            <th>name</th>
+            <th>retail price</th>
+            <th>category</th>
+            <th>creation date</th>
+        </thead>
+        <tbody>
+            {{#each productList}}
+                <tr>
+                    <td><img src="{{barcodeImg}}" alt=""></td>
+                    <td>{{name}}</td>
+                    <td>${{retailPrice}}</td>
+                    <td>{{category}}</td>
+                    <td>{{creationDate}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+
+
+
 
 </div> <br>
 
-<h2>danh sách hàng hóa:</h2>
-
-
-
-
-<table>
-    <thead>
-        <th>barcode</th>
-        <th>name</th>
-        <th>retail price</th>
-        <th>category</th>
-        <th>creation date</th>
-    </thead>
-    <tbody>
-        {{#each productList}}
-            <tr>
-                <td><img src="{{barcodeImg}}" alt=""></td>
-                <td>{{name}}</td>
-                <td>${{retailPrice}}</td>
-                <td>{{category}}</td>
-                <td>{{creationDate}}</td>
-            </tr>
-        {{/each}}
-    </tbody>
-</table>
 
 
 

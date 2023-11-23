@@ -36,5 +36,12 @@ router.get('/checkout', checkoutController.index);
 router.post('/checkout', checkoutController.findCtm);
 
 
+// router.get('/order', checkoutController)
+
+
+router.post('/checkout/add', checkoutController.addCus);
+
+
+
 
 module.exports = router;
