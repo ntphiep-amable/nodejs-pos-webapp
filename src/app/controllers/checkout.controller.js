@@ -13,9 +13,14 @@ class CheckoutController {
     // [POST] /employee/checkout
     findCtm = async (req, res) => {
         const phoneNum = req.body.phoneNum;
-        console.log(phoneNum);
+        // console.log(phoneNum);
 
         const customerCheck = await customerModel.findOne({ phoneNumber: phoneNum });
+        const customerId = customerCheck.id;
+
+        const thisOrder = await orderModel.findOne({ customerId: customerId });
+        const productList = thisOrder.products;
+        console.log(thisOrder.products[0]);
         
         if (!customerCheck) {
             return res.json({
@@ -30,7 +35,7 @@ class CheckoutController {
             return res.json({
                 status: true,
                 message: "ok man",
-                data: { fullname, address, phoneNum },
+                data: { fullname, address, phoneNum, productList },
             });
         }
     };

@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const employeesController = require('../app/controllers/employees.controller');
-const checkoutController = require('../app/controllers/checkout.controller')
+const checkoutController = require('../app/controllers/checkout.controller');
+const orderController = require('../app/controllers/order.controller');
+
+
 
 // [GET] /employee
 router.get('/', employeesController.index);
@@ -36,7 +39,7 @@ router.get('/checkout', checkoutController.index);
 router.post('/checkout', checkoutController.findCtm);
 
 
-// router.get('/order', checkoutController)
+router.get('/order', orderController.index);
 
 
 router.post('/checkout/add', checkoutController.addCus);

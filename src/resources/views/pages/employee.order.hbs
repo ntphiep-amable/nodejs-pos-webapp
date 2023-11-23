@@ -4,14 +4,37 @@
     <h2>xin chào <p id="name"></p></h2>
 </div> <br>
 
+tìm kiếm sản phẩm <br>
+<form id="findPrd">
+    <input type="text", placeholder="tìm sản phẩm"> 
+    <button type="submit">tim</button>
+</form><br>     
+
+or <br> <br>
+
+<button>quét barcode</button> <br> <br>
+
 <h2>đơn hàng hiện tại</h2> <br> <br>
 
 
-<form class="customerInfo">
-    <label for="phone">nhập số điện thoại khách</label><br>
-    <input type="text" id="phone" name="phone" required>
 
-    <br><br>
-    <button type="submit">tìm</button>
-</form>
 
+
+
+
+
+
+
+
+
+<h2>tới trang <button onclick="toCheckout()">checkout</button> </h2>
+
+
+<script>
+
+    function toCheckout() {
+
+
+        window.location.href = "/employee/checkout";
+    }
+</script>
