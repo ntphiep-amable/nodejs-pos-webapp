@@ -6,7 +6,7 @@
 
 tìm kiếm sản phẩm <br>
 <form id="findPrd">
-    <input type="text", placeholder="tìm sản phẩm"> 
+    <input type="text", placeholder="tìm sản phẩm" id="keyword"> 
     <button type="submit">tim</button>
 </form><br>     
 
@@ -14,8 +14,25 @@ or <br> <br>
 
 <button>quét barcode</button> <br> <br>
 
+
+<div id="addItem">
+
+    {{!-- ak: $5 <br>
+    
+    so luong:
+    <input type="text" name="quantity" id=""quantity>
+    <button>them</button> <br> <br> --}}
+</div>
+
+
 <h2>đơn hàng hiện tại</h2> <br> <br>
 
+<div id="cart">
+
+
+
+</div>
+<b id="totalAll"></b>
 
 
 
@@ -25,12 +42,134 @@ or <br> <br>
 
 
 
-
-
+<br> <br>
 <h2>tới trang <button onclick="toCheckout()">checkout</button> </h2>
 
 
 <script>
+
+    document.querySelector("#findPrd").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const keyword = document.querySelector("#keyword").value;
+
+        const response = await fetch('/employee/order/f', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({ keyword }),
+        });
+
+        const data = await response.json();
+        const { products } = data.data;
+
+        // console.log(products);
+        let prdList = '<b>ket qua tim kiem:</b> <br>';
+
+        products.forEach(product => {
+            // console.log(product.name);
+
+            prdList += `
+                ${product.name}: $${product.retailPrice} <br>
+    
+                so luong:
+                <input type="number" name="quantity" id="quantity_${product._id}">
+                <button onclick="addToCart('${product._id}', '${product.name}', '${product.retailPrice}')">them</button> <br> <br>
+            `
+        });
+
+        document.querySelector("#addItem").innerHTML = prdList;
+    });
+
+
+    function addToCart(productId, productName, retailPrice) {
+        const quantityInput = document.getElementById(`quantity_${productId}`).value;
+        const quantity = parseInt(quantityInput, 10) || 1;
+        const retailPriceNum = parseInt(retailPrice, 10);
+        // console.log(quantity + 1)
+
+        const totalPriceOne = retailPriceNum * quantity;
+
+        const shopCart = document.getElementById("cart");
+
+
+        const existingCartItem = document.getElementById(`cartItem_${productId}`);
+
+        if (!existingCartItem) {
+            const cartItem = document.createElement('div');
+            cartItem.id = `cartItem_${productId}`;
+            cartItem.className = "cartItem";
+
+            cartItem.innerHTML = `
+                <p>ten: ${productName}</p>
+                <p>so luong: <input type="number" id="quantity_${productId}_n" value="${quantity}" onchange="updateTotalPrice('${productId}', ${retailPriceNum})"></p>
+                <p>don gia: $${retailPrice}</p>
+                <p>tong: $<span class="totalPrice_${productId}" id="totalOne">${totalPriceOne}</span></p>
+                <button onclick="deleteCartItem('${productId}')">xoa</button>
+                <hr> <br>
+            `;
+
+            shopCart.appendChild(cartItem);
+        } else {        // existed
+            let cartOld = document.getElementById(`quantity_${productId}_n`);
+            const quantityOld = parseInt(cartOld.value, 10) || 1;
+            let newQuantity = quantity + quantityOld;
+            let newTotalOne = newQuantity * retailPrice;
+
+
+            cartOld.value = newQuantity;
+            document.querySelector(`.totalPrice_${productId}`).innerHTML = newTotalOne;
+        }
+
+
+        
+
+       
+
+        // updateTotalPrice();
+        totalAll();
+
+        document.querySelector("#addItem").innerHTML = '';
+    }
+
+    function updateTotalPrice(productId, retailPrice)  {
+        const quantityInput = document.getElementById(`quantity_${productId}_n`);
+        if (quantityInput) {
+            // console.log(quantity.value);
+            const quantity = parseInt(quantityInput.value, 10) || 1;
+            const totalPriceOne = retailPrice * quantity;
+
+            document.querySelector(`.totalPrice_${productId}`).innerHTML = `${totalPriceOne}`
+            // console.log(totalPrice);
+        }
+
+        totalAll();
+    }
+
+    function deleteCartItem(productId) {
+        const cartItem = document.getElementById(`cartItem_${productId}`);
+        if (cartItem) {
+            cartItem.remove();
+        }
+
+        totalAll();
+    }
+
+    function totalAll() {
+        const totalOnes = document.querySelectorAll("#totalOne");
+        let total = 0;
+
+        totalOnes.forEach(t => {
+            const priceOne = parseInt(t.innerHTML, 10) || 1;
+            total += priceOne;
+        });
+
+        
+        // console.log(total);
+        document.querySelector("#totalAll").innerHTML = `tong gio hang: $${total}`;
+    }
+
+
+
 
     function toCheckout() {
 

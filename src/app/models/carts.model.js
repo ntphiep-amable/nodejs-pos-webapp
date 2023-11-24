@@ -15,7 +15,7 @@ const cartSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    
+
     totalPrice: {
         type: Number,
         default: 0,

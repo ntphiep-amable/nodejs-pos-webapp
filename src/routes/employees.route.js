@@ -40,6 +40,7 @@ router.post('/checkout', checkoutController.findCtm);
 
 
 router.get('/order', orderController.index);
+router.post('/order/f', orderController.findPrd);
 
 
 router.post('/checkout/add', checkoutController.addCus);
