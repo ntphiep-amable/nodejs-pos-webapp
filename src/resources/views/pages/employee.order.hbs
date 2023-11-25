@@ -32,7 +32,7 @@ or <br> <br>
 
 
 </div>
-<b id="totalAll"></b>
+<b>tong gio hang: $<p id="totalAll"></p></b>
 
 
 
@@ -63,6 +63,8 @@ or <br> <br>
         const { products } = data.data;
 
         // console.log(products);
+
+        
         let prdList = '<b>ket qua tim kiem:</b> <br>';
 
         products.forEach(product => {
@@ -100,7 +102,7 @@ or <br> <br>
             cartItem.className = "cartItem";
 
             cartItem.innerHTML = `
-                <p>ten: ${productName}</p>
+                <p id="name_${productId}">ten: ${productName}</p>
                 <p>so luong: <input type="number" id="quantity_${productId}_n" value="${quantity}" onchange="updateTotalPrice('${productId}', ${retailPriceNum})"></p>
                 <p>don gia: $${retailPrice}</p>
                 <p>tong: $<span class="totalPrice_${productId}" id="totalOne">${totalPriceOne}</span></p>
@@ -119,11 +121,6 @@ or <br> <br>
             cartOld.value = newQuantity;
             document.querySelector(`.totalPrice_${productId}`).innerHTML = newTotalOne;
         }
-
-
-        
-
-       
 
         // updateTotalPrice();
         totalAll();
@@ -165,15 +162,40 @@ or <br> <br>
 
         
         // console.log(total);
-        document.querySelector("#totalAll").innerHTML = `tong gio hang: $${total}`;
+        document.querySelector("#totalAll").innerHTML = total;
     }
 
 
 
 
-    function toCheckout() {
+    async function toCheckout() {
+        const cartItems = document.querySelectorAll(".cartItem");
 
+        const productsData = [];
+        const totalAll = document.querySelector("#totalAll").innerHTML;
+        
+        cartItems.forEach(item => {
+            const productId = item.id.split("_")[1];
+            const productName = document.querySelector(`#name_${productId}`).innerHTML.split(":")[1];
+            const quantity = document.querySelector(`#quantity_${productId}_n`).value;
+            const totalOne = document.querySelector(`.totalPrice_${productId}`).innerHTML;
 
-        window.location.href = "/employee/checkout";
+            productsData.push({ productId, productName, quantity, totalOne });
+        }); 
+        
+        // console.log(productsData);
+        // console.log(totalAll);
+
+        const response = await fetch('/employee/order/create', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({ productsData, totalAll }),
+        });
+
+        const data = await response.json();
+
+        const { orderId } = data.data;
+
+        window.location.href = `/employee/checkout?id=${orderId}`;
     }
 </script>

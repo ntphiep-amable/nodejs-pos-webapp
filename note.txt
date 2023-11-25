@@ -1,3 +1,0 @@
-sua ten collection trong db
-them order vao db
-xy lys checkout

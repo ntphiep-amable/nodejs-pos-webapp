@@ -9,9 +9,9 @@ class EmployeesController {
     index = async (req, res) => {
         let productList = await productModel.find();
         let prds = productList.map(prd => {
-            let prdObj = prd.toObject();
-            return prdObj;
+            return prd.toObject();;
         });
+
         res.render('pages/employee.home.hbs', { productList: prds });  
     };
 

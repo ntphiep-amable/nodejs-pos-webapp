@@ -6,7 +6,18 @@ const customerModel = require("../models/customers.model");
 class CheckoutController {
     // [GET] /employee/checkout
     index = async (req, res) => {
-        res.render('pages/employee.checkout.hbs');
+        const orderId = req.query.id;
+        
+        const orderCheck = await orderModel.findOne({ _id: orderId });
+        let orderCheckObj = orderCheck.toObject();
+
+        // console.log(orderCheck);
+        const totalAll = orderCheckObj.totalAll;
+
+        const productList = orderCheck.products.toObject();
+
+
+        res.render('pages/employee.checkout.hbs', { productList: productList, totalAll: totalAll });
     };
 
 
@@ -16,19 +27,22 @@ class CheckoutController {
         // console.log(phoneNum);
 
         const customerCheck = await customerModel.findOne({ phoneNumber: phoneNum });
-        const customerId = customerCheck.id;
+        
 
-        const thisOrder = await orderModel.findOne({ customerId: customerId });
-        const productList = thisOrder.products;
-        console.log(thisOrder.products[0]);
+        
         
         if (!customerCheck) {
             return res.json({
                 status: false,
                 message: "k tim thay khach hang nay",
                 data: {},
-            });
+            }); 
         } else {
+            const customerId = customerCheck.id;
+            const thisOrder = await orderModel.findOne({ customerId: customerId });
+            const productList = thisOrder.products;
+            console.log(thisOrder.products[0]);
+
             const fullname = customerCheck.fullname;
             const address = customerCheck.address;
 

@@ -7,11 +7,34 @@
 <h2>thanh toán</h2> <br> <br>
 
 
+
+<div id="orderData">
+    <table>
+        <thead>
+            <th>ten</th>
+            <th>so luong</th>
+            <th>tong gia</th>
+        </thead>
+        <tbody>
+            {{#each productList}}
+                <tr>
+                    <td>{{productName}}</td>
+                    <td>{{quantity}}</td>
+                    <td>${{totalOne}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <b>Tong: ${{totalAll}}</b>
+</div>
+
+
+<br> <br>
 <form class="customerInfo">
     <label for="phone">nhập số điện thoại khách</label><br>
     <input type="text" id="phone" name="phone" required>
 
-    <br><br>
     <button type="submit">tìm</button>
 </form>
 
