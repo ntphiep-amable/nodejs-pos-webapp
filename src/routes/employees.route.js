@@ -37,14 +37,15 @@ router.post('/avt/update', employeesController.avtC)
 router.get('/checkout', checkoutController.index);
 router.post('/checkout', checkoutController.findCtm);
 router.post('/checkout/add', checkoutController.addCus);
-
-
+router.post('/checkout/confirm', checkoutController.confirmOrd);
 
 
 
 router.get('/order', orderController.index);
 router.post('/order/f', orderController.findPrd);
 router.post('/order/create', orderController.createOrder);
+
+
 
 
 

@@ -1,4 +1,4 @@
-<h1>employee page</h1><br>
+<a href="/employee"><h1>employee page</h1></a><br>
 
 <div>
     <h2>xin chào <p id="name"></p></h2>
@@ -40,7 +40,7 @@
 
 
 <br> <br>
-<div>
+<div class="idCus">
     <h3>thông tin khách hàng</h3>
 
 
@@ -50,7 +50,18 @@
         </div>
 
     
-</div>
+</div> <br>
+
+
+<label for="">so tien khach dua</label>
+<input type="number" id="give" disabled required> 
+<button id="back" onclick="back()">tra lai</button> <br>
+
+<p>so tien thua tra lai khach: $<b id="paidback"></b></p>
+
+<button onclick="conf()">xac nhan</button>
+
+
 
 
 
@@ -60,9 +71,35 @@
 
 
 <script>
+    const orderId = `{{orderId}}`;
+
+    function back() {
+        const give = document.querySelector("#give").value;
+
+        const paidback = document.querySelector("#paidback");
+        paidback.innerHTML = give - {{totalAll}};
+    };
+
+
+    async function conf() {
+        const customerId = document.querySelector(".idCus").id;
+
+
+        const response = await fetch('/employee/checkout/confirm', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({ orderId, customerId }),
+        });
+
+        const data = await response.json();
+
+        if (data.status) {
+            alert(data.message);
+        }
+    }
+
+    
     const addCustomer = document.querySelector("#addCus");
-
-
 
     const findCustomer = document.querySelector(".customerInfo");
     findCustomer.addEventListener('submit', async e => {
@@ -80,6 +117,7 @@
         // console.log(data.data);
 
         if (!data.status) {
+            // them khach hang moi
             addCustomer.innerHTML = `
                 <div id="addCus">
                     <p>khong thay thong tin khach hang, tao khach hang moi</p> <br>
@@ -105,12 +143,16 @@
                 const response = await fetch('/employee/checkout/add', {
                     method: "post",
                     headers: { "Content-Type": "application/json" },
-                    body : JSON.stringify({ fullname, address, phoneNum }),
+                    body : JSON.stringify({ fullname, address, phoneNum, orderId }),
                 });
 
                 const dataa = await response.json();
 
                 if (dataa.status) {
+                    // console.log(dataa.data);
+                    document.getElementById("give").disabled = false;
+                    document.getElementsByClassName("idCus")[0].id = dataa.data.customerId;
+
                     addCustomer.innerHTML = `
                         <table>
                             <thead>
@@ -130,9 +172,14 @@
                 }
             });
 
-        } else {
-            const productList = data.data.productList;
-            console.log(productList);
+
+
+        } else { 
+            document.getElementById("give").disabled = false;
+            const { fullname, address, phoneNum, customerId} = data.data;
+            // console.log(productList);
+            // console.log(thisOrders);
+            document.getElementsByClassName("idCus")[0].id = customerId;
 
             addCustomer.innerHTML = `
                 <table>
@@ -151,9 +198,9 @@
                 </table>
             `
 
-            document.querySelector("#fn").innerHTML = data.data.fullname;
-            document.querySelector("#ad").innerHTML = data.data.address;
-            document.querySelector("#pn").innerHTML = data.data.phoneNum;
+            document.querySelector("#fn").innerHTML = fullname;
+            document.querySelector("#ad").innerHTML = address;
+            document.querySelector("#pn").innerHTML = phoneNum;
         }
     })
 

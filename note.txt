@@ -1,0 +1,7 @@
+thay avt 
+set status cua nhan vien (active or deactive)
+doanh so ban hang cua tung nhan vien
+don hang nao da duoc ban thi k the xoa
+in hoa don
+
+phan 5
