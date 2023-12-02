@@ -1,18 +1,64 @@
-<h1>xin chào</h1>
+    <section id="homepage-body" class="bg-normal">
+      <div class="container">
+        <div class="row pt-5 align-items-center">
+          <div class="col-lg-6 col-12">
+            <div class="about">
+              <div class="font-head text-pri-color d-flex flex-column">
+                <p class="h1">Welcome to</p>
+                <p class="presstige-color display-3">Digital World</p>
+                <p class="display-4"><span class="text-muted">Sales</span> Assistant</p>
+              </div>
+              <p class="font-normal text-pri-color mt-3 mb-4 text-align-justify">
+                <dfn>DWA</dfn> which is an assistant for selling products in the Digital World. This
+                application is designed to manage your point of sales, inventory, customers
+                relationship, and more. <br />
+                It provides you with a simple and easy to use interface that helps you to manage
+                things such as sales transactions, products management, employees management, and
+                etcertera. <br />
+                <span class="fs-6">
+                  Click the
+                  <em class="presstige-color font-weight-bold">Get Started</em>
+                  button below to try it right now!
+                </span>
+              </p>
+              <div class="form-group">
+                <a href="/login" class="btn btn-pri-f btn-lg rounded-pill px-4 py-2">
+                  <span class="d-flex justify-content-between align-items-center">
+                    Get Started
+                    <i class="ml-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-arrow-right-circle-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+                        />
+                      </svg>
+                    </i>
+                  </span>
+                </a>
+              </div>
+            </div>
+            <!-- end of about -->
+          </div>
+          <!-- end of col-6 -->
+          <style></style>
+          <div class="col-lg-6 col-12">
+            <div id="illustration" class="pri-color">
+              <object data="./imgs/svgs/Mobile-bro.svg" type="image/svg+xml"></object>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<a href="login">login nè</a> <br>
-
-
-<br>
-<h2>đây là app POS xịn của toi!!</h2>
-
-<br>
-
-mô tả webapp các kiểu ~
-<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt perspiciatis neque, dignissimos magni nostrum temporibus sequi similique nemo tempora. Impedit dolorem numquam illo, dolorum corporis enim similique magni alias culpa.</p>
-
-<br>
-
-
-<p><b>mô tả webapp, giới thiệu màu mè các kiểu</b></p>
-
+<script>
+    // when website is loaded
+    $(window).on('load', function () {
+      setColorSVG('.pri-color', '#illustration object');
+    });
+</script>

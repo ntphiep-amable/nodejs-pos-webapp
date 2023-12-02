@@ -1,0 +1,87 @@
+form{
+    display: flex;
+    flex-direction: column;
+    & label {
+        display: inline-block;
+        margin-bottom: -0.45rem;
+        margin-left: 0.5rem;
+        background-color: var(--bg-primary-color);
+        padding: 0 0.5rem;
+        border-radius: 39%;
+        margin-left: 1rem;
+    }
+    & .form-control{
+        height: calc(1.75em + 0.75rem + 2px);
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        &:hover{
+            box-shadow: 2px 5px 3px 1px rgba(0,0,0,0.25);
+        }
+        &:focus{
+            outline: none;
+            box-shadow: 0 3px 2px 0.2rem var(--primary-25-opacity);
+            border: 1px solid var(--secondary-color);
+        }
+    }
+    & .btn-pri-f{
+        align-self: center;
+        min-width: 30%;
+        border-radius: 2rem;
+        &:hover{
+            font-weight: 500;
+            transform: scale(1.05);
+            transition: all 0.1s ease-in-out;
+            box-shadow: 2px 5px 3px 1px rgba(0,0,0,0.25);
+            -webkit-box-shadow: 0px 0px 10px 10px rgba(0,0,0,0.5);
+        }
+    }
+}
+#login-box{
+    padding: 5%;
+}
+.alert-danger{
+    color: var(--danger-color);
+}
+
+.text-sm{
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.00938em;
+    margin: 0;
+}
+
+@media (min-width: 992px){
+    .table-responsive{
+        padding: 0.5rem 0 0 1.5rem;
+    }
+}
+.table-responsive{
+    padding: 1.5rem;
+    background-color: #fff3;
+    border-radius: 0.2rem;
+    &:hover{
+        box-shadow: 1px 3px 3px 2px rgba(0,0,0,0.25);
+    }
+    & a {
+        color: var(--color-primary);
+        &:hover{
+            color: var(--teriary-color);
+            font-weight: bold;
+        }
+    }
+}
+
+.table{
+    color: var(--text-primary-color);
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #eee2;
+}
+.table-striped tbody tr:nth-of-type(even), .table-striped thead tr {
+    background-color: var(--bg-light-50);
+}
+.table-hover tbody tr:hover {
+    background-color: #eee6;
+    color: var(--text-primary-color);
+}
