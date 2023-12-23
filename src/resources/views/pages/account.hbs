@@ -1,0 +1,124 @@
+<link rel="stylesheet" href="/styles/styleEmployee.css">
+<section id='body-section' class='bg-normal head-bold pb-3'>
+<div class='container'>
+  <h1 class='text-center pri-color'>Employee page</h1><br />
+  <div class='row res-row'>
+    <div class='col-md-4 col-8 mb-2' id="avatarposition">
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            {{#if (equals user.avtImage '')}}
+                <div id="illustration">
+                    <object data="/imgs/svgs/employee.svg" type="image/svg+xml" class="svgimage w-100"></object>
+                    {{!-- <img src="https://unblast.com/wp-content/uploads/2023/12/Hardcover-Book-Mockup.jpg" alt=""> --}}
+                </div>
+            {{else}}
+                <div id="illustration">
+                    <img src="{{user.avtImage}}" alt="" class="svgimage w-100">
+                </div>
+            {{/if}}
+            {{#if viewOnly}}
+            {{else}}
+                <div>
+                    <button class="button-8" id='changeAvt'>Change avatar</button>
+                </div>
+            {{/if}}
+        </div>
+    </div> 
+    <div class='col-md-8 col-12 mb-2'>
+      <table class='table'>
+        <thead class='thead-dark'>
+          <tr class="table-active">
+            <th>Account Information</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="text-pri-color">
+          <tr>
+            <th scope='row'>Full name</th>
+            <td>{{user.fullname}}</td>
+            {{!-- <td>Otto</td>
+            <td>@mdo</td> --}}
+          </tr>
+          <tr>
+            <th scope='row'>Email</th>
+            <td>{{user.email}}</td>
+            {{!-- <td>Thornton</td>
+            <td>@fat</td> --}}
+          </tr>
+          <tr>
+            <th scope='row'>username</th>
+            <td>{{user.username}}</td>
+          </tr>
+          <tr>
+            <th scope='row'>Position</th>
+            <td>
+                {{#if (equals user.role 'admin')}}
+                    Administator
+                {{else}}
+                    Employee
+                {{/if}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</section>
+
+<script>
+  // when website is loaded $(window).on('load', function () { setColorSVG('#footer', "#footer
+  $(window).on('load', function () { 
+    setColorSVG('.pri-color', '#illustration object');
+    $(".close").click(()=>{ $(".alert").fadeOut(); });
+    
+    });
+
+    $("#changeAvt").click(async (e)=>{
+        e.preventDefault();
+
+        await Swal.fire({
+                title: 'Select a image',
+                html: `
+                    <form id="changeAvtF" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <input type="file" name="avatar" id="avatar" class="form-control-file">
+                        </div>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                        let form = $('#changeAvtF')[0];
+                        let formData = new FormData(form);
+                        let response = await fetch('/employee/changeAvatar', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        let result = await response.json();
+                        if (result.status) {
+                            return result;
+                        } else {
+                            Swal.showValidationMessage(
+                                `Request failed: ${result.message}`
+                            );
+                        }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: `${result.value.message}`,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    .then(()=>{
+                        location.reload();
+                    });
+                }
+        });
+    });
+    
+</script>

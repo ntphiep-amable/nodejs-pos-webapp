@@ -1,0 +1,14 @@
+{
+    "editor.inlineSuggest.enabled": true,
+    "editor.quickSuggestions": {
+        "strings": "on"
+    },
+    "files.associations": {
+        " *.css": "tailwindcss"
+    },
+    "tailwindCSS.includeLanguages": {
+        "plaintext": "html",
+        "javascript": "javascript",
+        "html": "HTML",
+    },
+}

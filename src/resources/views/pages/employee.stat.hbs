@@ -1,0 +1,536 @@
+<style>
+    a {
+        color: var(--text-secondary-color);
+    }
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+        color: var(--text-primary-color);
+        background-color: var(--bg-primary-color);
+        border-color: #dee2e6 #dee2e6 #fff;
+        border-bottom: 1px solid var(--bg-primary-color);
+    }
+</style>
+<link rel="stylesheet" href="/styles/form.css">
+
+<section id='body-section' class='bg-normal head-bold py-5'>
+    <div class="container">
+        {{!-- List of product --}}
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div>
+                    <!-- Tabs navs -->
+                    <ul class="nav nav-tabs mb-3 justify-content-center" id="ex-with-icons" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a data-mdb-tab-init class="nav-link active" id="ex-with-icons-tab-1" href="#today" role="tab"
+                        ><i class="fas fa-chart-pie fa-fw me-2"></i>Today</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a data-mdb-tab-init class="nav-link" id="ex-with-icons-tab-2" href="#yesterday" role="tab"
+                        ><i class="fas fa-chart-line fa-fw me-2"></i>Yesterday</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a data-mdb-tab-init class="nav-link" href="#within7days" role="tab"
+                        ><i class="fas fa-cogs fa-fw me-2"></i>Within 7 days</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a data-mdb-tab-init class="nav-link" href="#thismonth" role="tab"
+                       ><i class="fas fa-cogs fa-fw me-2"></i>This month</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a data-mdb-tab-init class="nav-link" id="specifTime" href="#specTime" role="tab"
+                       ><i class="fas fa-cogs fa-fw me-2"></i>Specific time</a>
+                    </li>
+                    </ul>
+                    <!-- Tabs navs -->
+
+                    <!-- Tabs content -->
+                    <div class="tab-content">
+                    <div class="tab-pane fade show active" id="today" role="tabpanel">
+                        <div class="container">
+                            <!-- Table -->
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <h2 class="text-center mb-4">
+                                            Sales report of <span class="pri-color">Today</span>
+                                        </h2>
+                                        <div class="col-5">
+                                            <p class="text-center text-sm text-bold">
+                                                Summary report
+                                            </p>
+                                            <table class="table border">
+                                                <tr>
+                                                    <th>Total amount received</th>
+                                                    <td>{{formatCurrency sumaryToday.totalAmount}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number of orders</th>
+                                                    <td>{{sumaryToday.numberOfOrders}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total n.o products sold</th>
+                                                    <td>{{sumaryToday.numberOfProducts}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="form-group search-spec">
+                                            <label for="search"><i class="bi bi-search"></i></label>
+                                            <input type="text" id="search" class="form-control" placeholder="Search by keyword">
+                                        </div>
+                                        <table class="table table-striped table-hover mt-2 w-100">
+                                            <thead>
+                                            <th scope="col">#</th>
+                                            <th scope="col">
+                                                Customer Info
+                                            </th>
+                                            <th scope="col">
+                                                Created at
+                                            </th>
+                                            <th scope="col">
+                                                N.o products
+                                            </th>
+                                            <th scope="col">
+                                                Total amount
+                                            </th>
+                                            </thead>
+                                            <tbody>
+                                            {{#each ordersToday}}
+                                                <tr>
+                                                <th scope="row">{{add @index 1}}</th>
+                                                <td>{{customerName}}<br>
+                                                    {{customerPhone}}
+                                                </td>
+                                                <td class="text-dot">{{formatDate orderDate}}</td>
+                                                <td>
+                                                    {{#each products}}
+                                                        {{quantity}} x {{productName}} <br>
+                                                    {{/each}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{formatCurrency totalAll}}
+                                                </td>
+                                                </tr>
+                                            {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of Table -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="yesterday" role="tabpanel">
+                        <div class="container">
+                            <!-- Table -->
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <h2 class="text-center mb-4">
+                                            Sales report of <span class="pri-color">Yesterday</span>
+                                        </h2>
+                                        <div class="col-5">
+                                            <p class="text-center text-sm text-bold">
+                                                Summary report
+                                            </p>
+                                            <table class="table border">
+                                                <tr>
+                                                    <th>Total amount received</th>
+                                                    <td>{{formatCurrency sumaryYesterday.totalAmount}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number of orders</th>
+                                                    <td>{{sumaryYesterday.numberOfOrders}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total n.o products sold</th>
+                                                    <td>{{sumaryYesterday.numberOfProducts}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="form-group search-spec">
+                                            <label for="search"><i class="bi bi-search"></i></label>
+                                            <input type="text" id="search" class="form-control" placeholder="Search by keyword">
+                                        </div>
+                                        <table class="table table-striped table-hover mt-2 w-100">
+                                            <thead>
+                                            <th scope="col">#</th>
+                                            <th scope="col">
+                                                Customer Info
+                                            </th>
+                                            <th scope="col">
+                                                Created at
+                                            </th>
+                                            <th scope="col">
+                                                N.o products
+                                            </th>
+                                            <th scope="col">
+                                                Total amount
+                                            </th>
+                                            </thead>
+                                            <tbody>
+                                            {{#each ordersYesterday}}
+                                                <tr>
+                                                <th scope="row">{{add @index 1}}</th>
+                                                <td>{{customerName}}<br>
+                                                    {{customerPhone}}
+                                                </td>
+                                                <td class="text-dot">{{formatDate orderDate}}</td>
+                                                <td>
+                                                    {{#each products}}
+                                                        {{quantity}} x {{productName}} <br>
+                                                    {{/each}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{formatCurrency totalAll}}
+                                                </td>
+                                                </tr>
+                                            {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of Table -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="within7days" role="tabpanel">
+                        <div class="container">
+                            <!-- Table -->
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <h2 class="text-center mb-4">
+                                            Sales report of <span class="pri-color">Within last 7 days</span>
+                                        </h2>
+                                        <div class="col-5">
+                                            <p class="text-center text-sm text-bold">
+                                                Summary report
+                                            </p>
+                                            <table class="table border">
+                                                <tr>
+                                                    <th>Total amount received</th>
+                                                    <td>{{formatCurrency sumaryWithinLast7Days.totalAmount}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number of orders</th>
+                                                    <td>{{sumaryWithinLast7Days.numberOfOrders}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total n.o products sold</th>
+                                                    <td>{{sumaryWithinLast7Days.numberOfProducts}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="form-group search-spec">
+                                            <label for="search"><i class="bi bi-search"></i></label>
+                                            <input type="text" id="search" class="form-control" placeholder="Search by keyword">
+                                        </div>
+                                        <table class="table table-striped table-hover mt-2 w-100">
+                                            <thead>
+                                            <th scope="col">#</th>
+                                            <th scope="col">
+                                                Customer Info
+                                            </th>
+                                            <th scope="col">
+                                                Created at
+                                            </th>
+                                            <th scope="col">
+                                                N.o products
+                                            </th>
+                                            <th scope="col">
+                                                Total amount
+                                            </th>
+                                            </thead>
+                                            <tbody>
+                                            {{#each ordersWithinLast7Days}}
+                                                <tr>
+                                                <th scope="row">{{add @index 1}}</th>
+                                                <td>{{customerName}}<br>
+                                                    {{customerPhone}}
+                                                </td>
+                                                <td class="text-dot">{{formatDate orderDate}}</td>
+                                                <td>
+                                                    {{#each products}}
+                                                        {{quantity}} x {{productName}} <br>
+                                                    {{/each}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{formatCurrency totalAll}}
+                                                </td>
+                                                </tr>
+                                            {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of Table -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="thismonth" role="tabpanel">
+                        <div class="container">
+                            <!-- Table -->
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <h2 class="text-center mb-4">
+                                            Sales report of <span class="pri-color">This month</span>
+                                        </h2>
+                                        <div class="col-5">
+                                            <p class="text-center text-sm text-bold">
+                                                Summary report
+                                            </p>
+                                            <table class="table border">
+                                                <tr>
+                                                    <th>Total amount received</th>
+                                                    <td>{{formatCurrency sumaryThisMonth.totalAmount}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number of orders</th>
+                                                    <td>{{sumaryThisMonth.numberOfOrders}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total n.o products sold</th>
+                                                    <td>{{sumaryThisMonth.numberOfProducts}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="form-group search-spec">
+                                            <label for="search"><i class="bi bi-search"></i></label>
+                                            <input type="text" id="search" class="form-control" placeholder="Search by keyword">
+                                        </div>
+                                        <table class="table table-striped table-hover mt-2 w-100">
+                                            <thead>
+                                            <th scope="col">#</th>
+                                            <th scope="col">
+                                                Customer Info
+                                            </th>
+                                            <th scope="col">
+                                                Created at
+                                            </th>
+                                            <th scope="col">
+                                                N.o products
+                                            </th>
+                                            <th scope="col">
+                                                Total amount
+                                            </th>
+                                            </thead>
+                                            <tbody>
+                                            {{#each ordersThisMonth}}
+                                                <tr>
+                                                <th scope="row">{{add @index 1}}</th>
+                                                <td>{{customerName}}<br>
+                                                    {{customerPhone}}
+                                                </td>
+                                                <td class="text-dot">{{formatDate orderDate}}</td>
+                                                <td>
+                                                    {{#each products}}
+                                                        {{quantity}} x {{productName}} <br>
+                                                    {{/each}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{formatCurrency totalAll}}
+                                                </td>
+                                                </tr>
+                                            {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of Table -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="specTime" role="tabpanel">
+                        <div class="container">
+                            <!-- Table -->
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <h2 class="text-center mb-4">
+                                            Sales report of <span class="pri-color">Specific time</span>
+                                        </h2>
+                                        <div class="col-5">
+                                            <p class="text-center text-sm text-bold">
+                                                Summary report
+                                            </p>
+                                            <table class="table border">
+                                                <tr>
+                                                    <th>Total amount received</th>
+                                                    <td id="totalSpecAmount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number of orders</th>
+                                                    <td id="numSpecOrders"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total n.o products sold</th>
+                                                    <td id="numSpecProducts"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="form-group search-spec">
+                                            <label for="search"><i class="bi bi-search"></i></label>
+                                            <input type="text" id="search" class="form-control" placeholder="Search by keyword">
+                                        </div>
+                                        <table class="table table-striped table-hover mt-2 w-100">
+                                            <thead>
+                                            <th scope="col">#</th>
+                                            <th scope="col">
+                                                Customer Info
+                                            </th>
+                                            <th scope="col">
+                                                Created at
+                                            </th>
+                                            <th scope="col">
+                                                N.o products
+                                            </th>
+                                            <th scope="col">
+                                                Total amount
+                                            </th>
+                                            </thead>
+                                            <tbody id="specTimeContent">
+                                            {{#each ordersThisMonth}}
+                                                <tr>
+                                                <th scope="row">{{add @index 1}}</th>
+                                                <td>{{customerName}}<br>
+                                                    {{customerPhone}}
+                                                </td>
+                                                <td class="text-dot">{{formatDate orderDate}}</td>
+                                                <td>
+                                                    {{#each products}}
+                                                        {{quantity}} x {{productName}} <br>
+                                                    {{/each}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{formatCurrency totalAll}}
+                                                </td>
+                                                </tr>
+                                            {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of Table -->
+                        </div>
+                    </div>
+                    </div>
+                    <!-- Tabs content -->
+                </div>
+            </div>
+        </div>
+        {{!-- end of list of product --}}
+    </div>
+</section>
+
+<script>
+    // Initialization for ES Users
+    $(document).ready(function () {
+        let $navTabs = $('.nav-tabs .nav-item .nav-link'),
+            $tabContent = $('.tab-content .tab-pane');
+        // Tabs
+        function tabTrig(e) {
+            e.preventDefault();
+            $navTabs.removeClass('active');
+            $(this).addClass('active');
+            $tabContent.removeClass('active show');
+            target = $(this).attr('href');
+            $(target).addClass('active show');
+        }
+        $('.nav-tabs .nav-item .nav-link:not(#specifTime)').click(tabTrig);
+
+        var $specTime = $('#specifTime'),
+            $specContent = $('#specTimeContent');
+        $specTime.click(async function (e) {
+            var $this = $(this);
+            e.preventDefault();
+            await Swal.fire({
+                title: 'Select period',
+                html: `
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="from">From</label>
+                            <input type="date" id="from" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label for="to">To</label>
+                            <input type="date" id="to" class="form-control">
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Search',
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    let from = $('#from').val(),
+                        to = $('#to').val();
+                    if (from == '' || to == '') {
+                        return Swal.showValidationMessage(
+                            `Please fill in all fields`
+                        )
+                    }
+                    if (from > to) {
+                        return Swal.showValidationMessage(
+                            `From must be before To`
+                        )
+                    }
+                    let response = await fetch(`/employee/stat/`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            body: JSON.stringify({
+                                from: from,
+                                to: to
+                            })
+                        }
+                    );
+                    return response.json();
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    let data = result.value, sumary = data.sumaryInTime;
+                    console.log(data);
+                    // formatCurrency
+                    $('#totalSpecAmount').html(new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(sumary.totalAmount));
+                    $('#numSpecOrders').html(sumary.numberOfOrders);
+                    $('#numSpecProducts').html(sumary.numberOfProducts);
+                    $specContent.html('');
+                    data.ordersInTime.forEach((order, index) => {
+                        $specContent.append(`
+                            <tr>
+                                <th scope="row">${index + 1}</th>
+                                <td>${order.customerName}<br>
+                                    ${order.customerPhone}
+                                </td>
+                                <td class="text-dot">${order.orderDate}</td>
+                                <td>
+                                    ${order.products.map(product => `${product.quantity} x ${product.productName} <br>`)}
+                                </td>
+                                <td class="text-center">
+                                    ${order.totalAll}
+                                </td>
+                            </tr>
+                        `);
+                    });
+                    $navTabs.removeClass('active');
+                    $this.addClass('active');
+                    $tabContent.removeClass('active show');
+                    target = $this.attr('href');
+                    $(target).addClass('active show');
+                }
+            });
+        });
+        // Search
+        $(".search-spec input").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>

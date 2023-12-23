@@ -1,0 +1,273 @@
+{{!-- <link rel="stylesheet" href="/styles/form.css"> --}}
+
+<section id='body-section' class='bg-normal head-bold py-3'>
+    <div class="container">
+        <div class="row">
+            <h1 class='text-center teriary-color w-100'>Employee page</h1><br />
+        </div>
+        <div class="row">
+        <div class='order-label mt-4 w-100 justify-content-end'>
+            <div class='order-name col-12 justify-content-around'>
+                <div style='font-weight: bold; font-size: 16px; margin-right: 10px;text-align: right;'> Hello,
+                    <span style='font-size: 20px;'>{{username}}</span>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <table id="orderData" class="table table-striped table-hover mt-2 w-100 text-pri-color" style="padding: 1.5rem;background-color: #fff3;">
+              <thead>
+                <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+              </tr>
+              </thead>
+              <tbody class="text-pri-color">
+                {{#each productList}}
+                <tr>
+                  <td>{{productName}}</td>
+                  <td>{{quantity}}</td>
+                  <td>
+                    {{formatCurrency totalOne}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="text-right fs-2">Subtotal</td>
+                  <td style=" font-size: 1.25em;font-weight: bold;" id="subTotal">
+                    {{formatCurrency totalAll}}
+                  </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-right fs-2">Tax <small>(10%)</small></td>
+                    <td style=" font-size: 1.25em;font-weight: bold;" id="taxPaid">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-right fs-2">Total Amount</td>
+                    <td style=" font-size: 1.8em;font-weight: bold;" id="totalAllPaid">
+                    </td>
+                </tr>
+              </tfoot>
+            </table>
+        </div>
+        <div class="row justify-content-between">
+            <div class="col-4 col-lg-3 mb-3">
+                <form class="customerInfo d-flex flex-column" id="customerPhoneInfo">
+                    <div class="form-group">
+                        <label for="phone">Phone</label><br>
+                        <input type="text" id="phone" name="phone" class="form-control" required placeholder="Enter phone number">
+                    </div>
+                    <button class="btn bg-btn" type="submit">Find</button>
+                </form>
+            </div>
+            <div class="col-7 col-lg-6">
+                <div id="addCus">
+                </div>
+            </div>
+            <div class="col-5 justify-self-end col-lg-3">
+                <form id="calculF">
+                    <div class="form-group">
+                        <label for="paidAmount"><h6 class="pri-color">
+                            <span id="custmName">Customer</span> gives
+                        </h6></label><br>
+                        <div class="d-flex" style="gap: 0.5em;">
+                            <input type="text" id="paidAmount" name="paidAmount" class="form-control">
+                            <button type="submit" class="btn bg-btn" id="calcul"><i class="bi bi-calculator"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="btn bg-btn d-flex align-items-center" id="skipStep">
+                <span>Next</span>
+                <i class="bi bi-skip-end-fill"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
+        const refomatCurrency = (currency) => {
+            return parseFloat(currency.replace(/[$,]/g, ''));
+        }
+        const subTotal = refomatCurrency($("#subTotal").text());
+        const tax = 0.1 * subTotal;
+        const totalAll = subTotal + tax;
+        $("#taxPaid").text(formatCurrency(tax));
+        $("#totalAllPaid").text(formatCurrency(totalAll));
+        $("#calculF").submit(async function(e) {
+            e.preventDefault();
+            const paidAmount = refomatCurrency($("#paidAmount").val());
+            if (paidAmount < totalAll) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'The amount paid is not enough!',
+                });
+            } else {
+                const change = paidAmount - totalAll;
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: `Change: <h2 class="pri-color">${formatCurrency(change)}</h2>`,
+                });
+                // window.location.href = `/employee/checkout/bill-${(new URLSearchParams(location.search)).get('id')}`;
+            }
+        });
+
+        $("#skipStep").click(async function() {
+            if (isSkip) {
+                window.location.href = `/employee/checkout/bill-${(new URLSearchParams(location.search)).get('id')}`;
+                return;
+            }
+            let isConfirm = await confirmDialog("Skip this step?", "Are you sure you want to skip this step?", "Skip");
+            if (!isConfirm) {
+                return;
+            } else {
+                window.location.href = `/employee/checkout/bill-${(new URLSearchParams(location.search)).get('id')}`;
+            }
+        });
+    });
+    const addCustomer = document.querySelector("#addCus");
+    const findCustomer = document.querySelector(".customerInfo");
+    const $phoneF = $("#customerPhoneInfo");
+    var isSkip = false;
+    $phoneF.submit(async (e) => {
+        e.preventDefault();
+
+        const phoneNum = document.querySelector("#phone").value;
+
+        const response = await fetch('/employee/checkout', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({phoneNum}),
+        });
+
+        const data = await response.json();
+        // console.log(data.data);
+
+        if (!data.status) {
+            addCustomer.innerHTML = `
+                <h2 class="presstige-color">
+                        Not found customer
+                </h2>
+                <p>Please add new customer</p>
+                <form class="addCus">
+                    <div class="form-group">
+                    <label for="fullname">Fullname</label>
+                    <input type="text" id="fullname" class="form-control" name="fullname" required placeholder="Enter fullname">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label><br>
+                        <input type="text" class="form-control" id="address" name="address" required placeholder="Enter address">
+                    </div>
+                    <button class="btn bg-btn" type="submit">Add</button> 
+                </form>
+            `
+        
+            document.querySelector("#addCus").addEventListener('submit', async e => {
+                e.preventDefault();
+
+                const fullname = document.querySelector("#fullname").value;
+                const address = document.querySelector("#address").value;
+
+                const response = await fetch('/employee/checkout/add', {
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    body : JSON.stringify({ fullname, address, phoneNum, orId: (new URLSearchParams(location.search)).get('id') }),
+                });
+
+                const dataa = await response.json();
+                if (dataa.status) {
+                    addCustomer.innerHTML = `<h2 class="presstige-color">Please enter customer phone number again</h2>`
+                    await Swal.fire({
+                        icon: 'success',
+                        title: dataa.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+
+        } else {
+            addCustomer.innerHTML = `
+                <table class="table table-striped table-hover mt-2 w-100" style="padding: 1.5rem;background-color: #fff3;">
+                    <thead>
+                        <th>Fulname</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Choose</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="fn"></td>
+                            <td id="ad"></td>
+                            <td id="pn"></td>
+                            <td ><button class="btn chooseCtm hidden-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-check" viewBox="0 0 16 16">
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4"/>
+                                </svg>
+                            </button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `
+
+            document.querySelector("#fn").innerHTML = data.data.fullname;
+            document.querySelector("#ad").innerHTML = data.data.address;
+            document.querySelector("#pn").innerHTML = data.data.phoneNum;
+            var ctmId = data.data.ctmId;
+        }
+        $(".chooseCtm").click(async function() {
+                isSkip = true;
+                var orderId = (new URLSearchParams(location.search)).get('id');
+                const response = await fetch('/employee/checkout/choose', {
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    body : JSON.stringify({ ctmId: ctmId, orId: orderId }),
+                });
+
+                const data = await response.json();
+
+                if (data.status) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    $("#custmName").text(data.data.cmtName);
+                    /*
+                    setTimeout(() => {
+                        window.location.href = `/employee/checkout/bill-${orderId}`;
+                    }, 1200);
+                    */
+                } else {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+        });
+    });
+</script>

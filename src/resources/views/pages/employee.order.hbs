@@ -1,0 +1,344 @@
+
+
+
+
+
+
+<style>
+  .limit-w {
+    max-width: 80px;
+  }
+</style>
+
+
+<link rel='stylesheet' href='/styles/styleEmployee.css' />
+<link rel='stylesheet' href='/styles/form2.css' />
+<section id='body-section' class='bg-normal head-bold py-3'>
+  <div class="container">
+    <div class="row">
+      <h1 class='text-center teriary-color w-100'>Employee page</h1><br />
+    </div>
+    <div class="row">
+      <div class='order-label mt-4 w-100 justify-content-between'>
+        <form id='findPrd' class='find-product col-4'>
+          <div class="form-group d-flex flex-row align-items-center justify-content-center" style="gap: 0.5em;">
+            <input type='text' class="form-control" placeholder='Find product' id='keyword' />
+            <div class="border border-2 rounded d-flex justify-content-center align-items-center" style="width: 2.5em; height: 2.5em;">
+              <button type='submit' class='btn btn-hidden text-pri-color'><div><i class='bi bi-search'></i></div>
+              </div></button>
+            </div>
+        </form>
+        <div class='order-name col-3 justify-content-around'>
+          <div style='font-weight: bold; font-size: 16px; margin-right: 10px'>Hello,
+            <span style='font-size: 20px;'>{{username}}</span></div>
+        </div>
+      </div>
+      </div>
+  
+  
+
+  {{! List of product }}
+      <div class='row justify-content-center'>
+        <div class="col-md-4 col-10">
+          <div >
+            {{!-- <b>ket qua tim kiem:</b> <br> --}}
+            <table class="table table-striped table-hover mt-2 w-100" style="padding: 1.5rem;background-color: #fff3;">
+              <thead>
+                <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Add?</th>
+              </tr>
+              </thead>
+              <tbody id="addItem">
+                {{!-- <tr>
+                  <td>Name</td>
+                  <td>Price</td>
+                  <td>
+                    <input type="number" name="quantity" id="quantity" class="form-control limit-w">
+                  </td>
+                  <td><button class="btn border btn-secondary" style="font-size: 1em;">Add</button></td>
+                </tr>
+              <tr>
+                <td>ak</td>
+                <td>$5</td>
+                <td>
+                  <input type="number" name="quantity" id="quantity" class="form-control limit-w">
+                </td>
+                <td>$5</td>
+              </tr>
+              <tr>
+                <td>ak</td>
+                <td>$5</td>
+                <td>
+                  <input type="number" name="quantity" id="quantity" class="form-control limit-w">
+                </td>
+                <td>$5</td>
+              </tr> --}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class='col-md-8 col-12'>
+          <div>
+            <!-- Tabs navs -->
+
+            <!-- Tabs content -->
+            <div class='tab-content'>
+              <div class='tab-pane fade show active' id='today' role='tabpanel'>
+                <div class='container'>
+                  <!-- Table -->
+                  <div class='row justify-content-center'>
+                    <div class='col-12'>
+                      <div class='table-responsive'>
+                        <h2 class='text-center mb-4'>
+                          Orders
+                        </h2>
+                        <div class='col-5'>
+                          <p class='text-center text-sm text-bold'>
+                            Summary orders
+                          </p>
+                          <table class='table border'>
+                            <tr>
+                              <th>Number of products</th>
+                              <td id="noProduct">30</td>
+                            </tr>
+                            <tr>
+                              <th>Total</th>
+                              <td id="totalAll">$0.00</td>
+                            </tr>
+                          </table>
+                        </div>
+                        <table class='table table-striped table-hover mt-2 w-100'>
+                          <thead>
+                            <th scope='col' class='text-center'>
+                              Name product
+                            </th>
+                            <th scope='col' class='text-center'>
+                              N.o Products
+                            </th>
+                            <th scope='col' class='text-center'>
+                              Price
+                            </th>
+                            <th scope='col' class='text-center'>
+                              Total Price
+                            </th>
+                          </thead>
+                          <tbody id="cart">
+                            
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th scope='row' class='text-right' style="vertical-align: middle;font-size: 1.5em;">
+                                {{!-- Total --}}
+                              </th>
+                              <td class='text-center' colspan='4'>
+                                <div class="d-flex align-items-center justify-content-end">
+                                  <button class="btn bg-btn d-flex align-items-center justify-content-end" onclick="toCheckout()">
+                                    <div>Checkout</div>
+                                    <i class="bi bi-chevron-compact-right"></i>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- end of Table -->
+                </div>
+              </div>
+            </div>
+            <!-- Tabs content -->
+          </div>
+        </div>
+      </div>
+      {{! end of list of product }}
+      </div>
+</section>
+
+<script>
+
+    document.querySelector("#findPrd").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const keyword = document.querySelector("#keyword").value;
+
+        const response = await fetch('/employee/order/f', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({ keyword }),
+        });
+
+        const data = await response.json();
+        const { products } = data.data;
+
+        // console.log(products);
+
+        
+        let prdList = '';
+
+        products.forEach(product => {
+            // console.log(product.name);
+
+            prdList += `
+                <tr>
+                  <td>${product.name}</td>
+                  <td>${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.retailPrice)}</td>
+                  <td>
+                    <input type="number" name="quantity" id="quantity_${product._id}" class="form-control limit-w" min="1" max="100" value="1">
+                  </td>
+                  <td><button class="btn border btn-secondary" style="font-size: 1em;"
+                  onclick="addToCart('${product._id}', '${product.name}', '${product.retailPrice}')"
+                  >Add</button></td>
+                </tr>
+            `
+
+        });
+
+        document.querySelector("#addItem").innerHTML = prdList;
+    });
+
+
+    function addToCart(productId, productName, retailPrice) {
+        const quantityInput = document.getElementById(`quantity_${productId}`).value;
+        const quantity = parseInt(quantityInput, 10) || 1;
+        const retailPriceNum = parseInt(retailPrice, 10);
+        // console.log(quantity + 1)
+
+        const totalPriceOne = retailPriceNum * quantity;
+
+        const shopCart = document.getElementById("cart");
+
+        const existingCartItem = document.getElementById(`cartItem_${productId}`);
+
+        if (!existingCartItem) {
+            const cartItem = document.createElement('tr');
+            cartItem.id = `cartItem_${productId}`;
+            cartItem.className = "cartItem";
+  /*
+            cartItem.innerHTML = `
+                <p >ten: ${productName}</p>
+                <p>so luong: <input type="number" id="quantity_${productId}_n" value="${quantity}" onchange="updateTotalPrice('${productId}', ${retailPriceNum})"></p>
+                <p>don gia: $${retailPrice}</p>
+                <p>tong: $<span class="totalPrice_${productId}" id="totalOne">${totalPriceOne}</span></p>
+                <button onclick="deleteCartItem('${productId}')">xoa</button>
+                <hr> <br>
+            `;
+  */
+            cartItem.innerHTML = `
+                              <td id="name_${productId}" class='text-center'>
+                                ${productName}
+                              </td>
+                              <td class='text-dot text-center'>
+                                <input type="number" class="form-control limit-w qty" id="quantity_${productId}_n" value="${quantity}" onchange="updateTotalPrice('${productId}', ${retailPriceNum})">
+                              </td>
+                              <td class='text-center'>
+                                <span id="totalPrice_${productId}" class="totalOne">${totalPriceOne}</span>
+                              </td>
+                              <td class='text-center'>
+                                <button class="btn btn-danger" onclick="deleteCartItem('${productId}')">
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                              </td>
+                            `;
+
+            shopCart.appendChild(cartItem);
+        } else {        // existed
+            let cartOld = document.getElementById(`quantity_${productId}_n`);
+            const quantityOld = parseInt(cartOld.value, 10) || 1;
+            let newQuantity = quantity + quantityOld;
+            let newTotalOne = newQuantity * retailPrice;
+
+
+            cartOld.value = newQuantity;
+            document.querySelector(`#totalPrice_${productId}`).innerHTML = newTotalOne;
+        }
+
+        // updateTotalPrice();
+        totalAll();
+
+        document.querySelector("#addItem").innerHTML = '';
+    }
+
+    function updateTotalPrice(productId, retailPrice)  {
+        const quantityInput = document.getElementById(`quantity_${productId}_n`);
+        if (quantityInput) {
+            // console.log(quantity.value);
+            const quantity = parseInt(quantityInput.value, 10) || 1;
+            const totalPriceOne = retailPrice * quantity;
+
+            document.querySelector(`#totalPrice_${productId}`).innerHTML = `${totalPriceOne}`
+            // console.log(totalPrice);
+        }
+        totalAll();
+    }
+
+    function deleteCartItem(productId) {
+        const cartItem = document.getElementById(`cartItem_${productId}`);
+        if (cartItem) {
+            cartItem.remove();
+        }
+
+        totalAll();
+    }
+
+    function totalAll() {
+        const totalOnes = document.querySelectorAll(".totalOne"),
+            $qty = $(".qty");
+        let total = 0;
+
+        totalOnes.forEach(t => {
+            const priceOne = parseInt(t.innerHTML, 10) || 1;
+            total += priceOne;
+        });
+
+        let tolQty = 0;
+        $qty.each(function() {
+            tolQty += parseInt($(this).val(), 10) || 1;
+        });
+        $("#noProduct").html(tolQty);
+        
+        // console.log(total);
+        document.querySelector("#totalAll").innerHTML = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
+    }
+
+
+
+
+    async function toCheckout() {
+        const cartItems = document.querySelectorAll(".cartItem");
+
+        const productsData = [];
+        const totalAll = document.querySelector("#totalAll").innerHTML.replace(/[$,]/g, '');
+        
+        cartItems.forEach(item => {
+            const productId = item.id.split("_")[1];
+            const productName = document.querySelector(`#name_${productId}`).innerText.trim();
+            const quantity = document.querySelector(`#quantity_${productId}_n`).value;
+            const totalOne = document.querySelector(`#totalPrice_${productId}`).innerHTML;
+
+            productsData.push({ productId, productName, quantity, totalOne });
+        }); 
+        
+        // console.log(productsData);
+        // console.log(totalAll);
+
+        const response = await fetch('/employee/order/create', {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body : JSON.stringify({ productsData, totalAll }),
+        });
+
+        const data = await response.json();
+        if (!data.status) {
+            return dialogAlert("Announcement",data.message);
+        }
+
+        const { orderId } = data.data;
+
+        window.location.href = `/employee/checkout?id=${orderId}`;
+    }
+</script>

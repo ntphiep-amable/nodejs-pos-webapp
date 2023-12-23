@@ -1,0 +1,182 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="/styles/form.css">
+<section id='body-section' class='bg-normal head-bold py-3'>
+    <div class="container text-pri-color" id="bill-page">
+        <div class="row justify-content-end">
+            <form>
+                <span id="exportPDF" class="btn btn-pri-f">Export PDF</span>
+            </form>
+        </div>
+        <div class="row card my-4 p-3 bg-normal" id="bill-details">
+            <div class="card-header row">
+                <div class="col-12">
+                    <h1 class='text-center w-100'>Digital Receipt <br>
+                        <span class="pri-color">Digital World <span class="text-muted">sales</span>
+                        Assistant</span>
+                </div>
+                <div class="col-12">
+                    <div class="row justify-content-between">
+                        <div class="col-md-5 col-12">
+                            <h4 class="text-center">Staff Information</h4>
+                            <div class="row">
+                                <div class="col-md-5 col-12">
+                                    <label for="staffname"><b>Name</b></label>
+                                </div>
+                                <div class="col-md-7 col-12">
+                                    <span id="staffname">{{staff.fullname}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-12">
+                                    <label for="staffemail"><b>Email</b></label>
+                                </div>
+                                <div class="col-md-7 col-12">
+                                    <span id="staffemail">
+                                        {{{breakableEmail staff.email}}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-12">
+                                    <label for="staffemail"><b>Order Date</b></label>
+                                </div>
+                                <div class="col-md-7 col-12">
+                                    <span id="staffemail">
+                                        {{formatDate orderDate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4 class="text-center">Customer Information</h4>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-5 col-12">
+                                            <label for="ctmname"><b>Name</b></label>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <span>{{ctm.fullname}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-5 col-12">
+                                            <label for="ctmphone"><b>Phone</b></label>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <span id="ctmphone">
+                                                {{formatPhone ctm.phoneNum}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body w-100">
+                <div class="d-flex flex-column justify-content-between">
+                    <div class="row pb-2" style="font-weight: bold;">
+                        <div class="col-lg-8 col-7 un-wrap">Product</div>
+                        <div class="col-lg-2 col-2 un-wrap">Qty</div>
+                        <div class="col-lg-2 col-3 text-right">Price</div>
+                    </div>
+                    {{#each productList}}
+                    <div class="row py-1">
+                        <div class="col-lg-8 col-7 un-wrap">{{productName}}</div>
+                        <div class="col-lg-2 col-2 un-wrap">{{quantity}}</div>
+                        <div class="col-lg-2 col-3 text-right">{{formatCurrency totalOne}}</div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="card-footer row fs-1">
+                <div class="col-12">
+                    <div class="row justify-content-between text-right">
+                        <div class="col-8">
+                            <span>
+                                <b>Subtotal</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                                <span id="totalAll">
+                                    {{formatCurrency totalAll}}
+                                </span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-right">
+                        <div class="col-8">
+                            <span>
+                                <b>Tax <small>(10%)</small></b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                                <span id="taxPaid">
+                                </span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-right fs-2">
+                        <div class="col-8">
+                            <span>
+                                <b>Total</b>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <strong>
+                                <span id="totalPaid" class="presstige-color">
+                                </span>
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+        $(document).ready(function (){
+            const formatCurrency = (num) => {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(num)
+            }
+            const refomatCurrency = (str) => {
+                return str.replace(/[$,]/g, '');
+            }
+            const totalAll = document.getElementById('totalAll').innerText.trim();
+            let tax = 0.1 * refomatCurrency(totalAll);
+            let totalPaid = parseFloat(refomatCurrency(totalAll)) + tax;
+            document.getElementById('taxPaid').innerText = formatCurrency(tax);
+            document.getElementById('totalPaid').innerText = formatCurrency(totalPaid);
+        })
+        $(window).on('load', function() {
+            const btn = document.getElementById('exportPDF');
+            function exportPDF() {
+                var element = document.getElementById('bill-details');
+                var opt = {
+                    margin: 0.5,
+                    filename: 'receipt.pdf',
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'letter',
+                        orientation: 'portrait'
+                    }
+                };
+                html2pdf().set(opt).from(element).save();
+            }
+            btn.addEventListener('click', exportPDF);
+        });
+</script>
