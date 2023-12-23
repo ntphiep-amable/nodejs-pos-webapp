@@ -8,12 +8,9 @@ const userSchema = new Schema({
     password: String,
     role: String,
     avtImage: String,
-
-    
-    isActive: Boolean,
-    
-    isLocked: Boolean,
     isConfirmed: Boolean,
+    isActive: Boolean,
+    isLocked: Boolean,
     emailConfirmed: Boolean,
     token: String,
     startTime: Number,

@@ -1,1 +1,75 @@
-<h1>link đã hết hạn (1 phút), liên hệ admin để có link mới</h1>
+<link rel="stylesheet" href="/styles/form.css">
+{{#if tk}}
+<section id='body-section' class='bg-normal'>
+    <div class='container'>
+        <div class="row justify-content-center py-5">
+            <div class="col-md-6 col-10">
+                <h2 class="text-center mt-5">
+                    Your account has been successfully verified.
+                    <span class="pri-color">Set your password</span>
+                </h2>
+                <p class="text-center text-sm">
+                    Please set your password to continue
+                </p>
+                <form class='my-2' id="setPass" action='/employee/set-password' method='POST'>
+                    <div class="form-group">
+                        <label for='password'>Your password</label>
+                        <input type='password' id='password' name='password' class="form-control" required placeholder="Your password" />
+                    </div>
+                    <div class="form-group">
+                        <span class="note danger-color mt-2">
+                            <i class="bi bi-exclamation-circle"></i>
+                            Password must be at least 6 characters long. <br>
+                            <i class="bi bi-exclamation-circle"></i>
+                            Password must be contain at least one uppercase letter, one lowercase letter. <br>
+                            <i class="bi bi-exclamation-circle"></i>
+                            Password must be contain at least one number and one special character.
+                        </span>
+                    </div>
+                    <div class="form-group">
+                    <label for='confirmPassword'>Confirm password</label><br />
+                    <input type='password' id='confirmPassword' name='confirmPassword' class="form-control" required placeholder="Confirm password" />
+                    <input type="hidden" name="tk" id="tk" value="{{tk}}">
+                    </div>
+                    <button type='submit' class="btn mt-1 btn-pri-f">
+                    Set password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var validateRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$/;
+    $("#setPass").submit(async function(e) {
+        e.preventDefault();
+        var password = $("#password").val();
+        var confirmPassword = $("#confirmPassword").val();
+        if (password != confirmPassword) {
+            await dialogAlertWait("Error", "Password and confirm password not match");
+            return false;
+        } else if (!validateRegex.test(password)) {
+            await dialogAlertWait("Error", "Password is not valid with the rules");
+            return false;
+        } else {
+            $(this).unbind().submit(); // continue the submit unbind preventDefault
+        }
+    });
+</script>
+{{else}}
+<section id='homepage-body' class='bg-normal'>
+    <div class='container'>
+        <div class="row justify-content-center py-5">
+            <div class="col-md-8">
+                <div class="table-responsive">
+                    <h1 class="fs-3 presstige-color">
+                        <span class="danger-color">The link was expired or invalid!</span>
+                    </h1>
+                    <h5>Please contact the administrator's support to resend another 1-minute link.</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{/if}}

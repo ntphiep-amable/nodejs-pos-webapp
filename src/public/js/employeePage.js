@@ -1,8 +1,24 @@
-if (localStorage.getItem("role") !== "employee" || !localStorage.getItem("username")) {
-    window.location.href = '/login';
-}
+$(window).on('load', function() {
+    $(".search-spec input").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("table tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+    // See barcode image
+    $(".see-barcode").click(function() {
+        let barcode = $(this).data("src");
+        Swal.fire({
+            title: '<span style="color: var(--bg-primary-color)">Barcode</span>',
+            html: `<img src="${barcode}" alt="barcode" style="width: 100%">`,
+            showCloseButton: true,
+            showConfirmButton: false,
+            background: 'var(--text-primary-color)',
+        });
+    });
+});
 
-document.querySelector('#name').innerHTML =  localStorage.getItem("fullname");
+// document.querySelector('#name').innerHTML =  localStorage.getItem("fullname");
 
 document.querySelector('#signoutBtn').addEventListener('click', e => {
     localStorage.clear();
@@ -11,7 +27,7 @@ document.querySelector('#signoutBtn').addEventListener('click', e => {
 
 document.querySelector('#changePass').addEventListener('click', async e => {
     e.preventDefault();
-    window.location.href = 'employee/p/update';
+    window.location.href = '/employee/p/update';
 });
 
 document.querySelector('#changeAvt').addEventListener('click', async e => {

@@ -5,7 +5,6 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const JsBarcode = require("jsbarcode");
 
-
 function genBarcode(code) {
     const canvas = createCanvas(200, 200);
     JsBarcode(canvas, code, {
@@ -16,8 +15,7 @@ function genBarcode(code) {
     });
 
     const buffer = canvas.toBuffer('image/png');
-    const srcPath = path.resolve(__dirname, '../..');
-    console.log(srcPath);
+    const srcPath = path.resolve(__dirname, '../..'); // D:\University\NodeJS\Final-project\Node new\nodejs-finalproject\src
     fs.writeFileSync(srcPath + `/public/images/barcode/${code}.png`, buffer);
 }
 
@@ -30,17 +28,22 @@ class ProductController {
             let prdObj = prd.toObject();
             return prdObj;
         });
-
-        res.render('pages/admin.products.hbs', { productList: prds });
+        // get a list of categories
+        let categories = [];
+        prds.forEach(prd => {
+            if (!categories.includes(prd.category)) {
+                categories.push(prd.category);
+            }
+        });
+        res.render('pages/admin.products.hbs', { productList: prds, categories, isAdm: true, navActive: 'products' });
     };
 
 
     // [POST] /admin/products
     addPrd = async (req, res) => {
-        // console.log("helelele")
-        const { pname, importPrice, retailPrice, category } = req.body;
-
+        const { pcode, pname, importPrice, retailPrice, category } = req.body;
         const newProduct = new productModel({
+            barcode: '',
             name: pname,
             barcodeImg: '',
             importPrice: importPrice,
@@ -50,24 +53,54 @@ class ProductController {
             beenPurchased: false,
             image: '',
         });
-
+        // req.file ? `/images/pdThumbs/${req.file.filename}` : null
+        var barcode = '';
         try {
             const result = await newProduct.save();
             const objectID = result._id;
-            // console.log(objectID);
-            const barcodeImgPath = `/images/barcode/${objectID}.png`;
+            if (pcode) {
+                const isBarcodeExist = await productModel.findOne({ barcode: pcode });
+                if (isBarcodeExist) {
+                    return res.status(400).json({
+                        status: false,
+                        message: "Barcode existed",
+                        data: {}
+                    });
+                }
+                barcode = pcode;
+            } else {
+                barcode = objectID;
+            }
+            var file = req.file;
+            var imgPath = '';
+            if (file) {
+                imgPath = `/images/pdThumbs/${req.file.filename}`;
+                if (!pcode){ // if there is no pcode, then rename the image file to the objectID
+                    fs.renameSync(file.path, file.destination + `/${barcode}.png`);
+                    imgPath = `/images/pdThumbs/${barcode}.png`;
+                }
+            }
 
-            await productModel.updateOne({ _id: objectID }, { barcodeImg: barcodeImgPath });
-            genBarcode(objectID);
+            const barcodeImgPath = `/images/barcode/${barcode}.png`;
+
+            await productModel.updateOne({ _id: objectID }, { 
+                barcode: barcode,
+                barcodeImg: barcodeImgPath,
+                image: imgPath
+            });
+            genBarcode(barcode);
 
         } catch (error) {
-            console.log(err)
+            console.log(error);
+            return res.status(500).json({
+                status: false,
+                message: "Something went wrong, please try again later",
+                data: {}
+            });
         }
-        
-
         return res.json({
             status: true,
-            message: "lưu ok",
+            message: "Product added successfully",
             data: {}
         });
         
@@ -75,19 +108,19 @@ class ProductController {
 
     // [POST] /admin/products/e
     thisPrd = async (req, res) => {
-        console.log(req.body);
         const prdCheck = await productModel.findOne({ _id: req.body.prdID });
 
         const name = prdCheck.name;
         const imp = prdCheck.importPrice;
         const ret = prdCheck.retailPrice;
         const cat = prdCheck.category;
+        const barcode = prdCheck.barcode;
 
 
         return res.json({
             status: true,
-            message: "lấy ok",
-            data: { name, imp, ret, cat }
+            message: "Get product successfully",
+            data: { name, imp, ret, cat, barcode }
         });
     }
 
@@ -100,11 +133,7 @@ class ProductController {
 
     // [POST] /admin/products/update
     postUpdate = async (req, res) => {
-        const prdID = req.body._id;
-        // const newName = req.body.pname;
-        // const newImp = req.body.importPrice;
-        // const newRet = req.body.retailPrice;
-        // const newCat = req.body.category;
+        const barcode = req.body.pcode;
 
         const newData = {
             name: req.body.pname,
@@ -112,14 +141,29 @@ class ProductController {
             retailPrice:  req.body.retailPrice,
             category: req.body.category,
         }
+        if (req.file) {
+            newData.image = `/images/pdThumbs/${req.file.filename}`;
+        }
+        
+        // await productModel.findOne({ _id: barcode }).then(async (prd) => {
+        //     console.log(prd);
+        // });
 
-        await productModel.updateOne({ _id: prdID}, newData).then(() => {
+        await productModel.updateOne({ barcode: barcode}, newData).then(() => {
             return res.json({
                 status: true,
-                message: "update thành công",
+                message: "Update product successfully",
                 data: { }
             })
         })
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).json({
+                status: false,
+                message: "Something went wrong, please try again later",
+                data: {}
+            });
+        });
     }
 
 
@@ -128,17 +172,30 @@ class ProductController {
         const prdID = req.params.id;
 
         try {
-            const delPrd = await productModel.findByIdAndDelete(prdID);
-            if (!delPrd) {
-                return res.status(404).json({ message: 'k tìm thấy sản phẩm' });
+            const prdObj = await productModel.findOne({ _id: prdID });
+            if (prdObj.beenPurchased) {
+                return res.json({
+                    status: false,
+                    message: "Product has been purchased, cannot delete",
+                    data: { }
+                });
+            } else {
+                const delPrd = await productModel.findByIdAndDelete(prdID);
+                if (!delPrd) {
+                    return res.status(400).json({ message: 'Product not found' });
+                }
+                const srcPath = path.resolve(__dirname, '../../public'); // D:\University\NodeJS\Final-project\Node new\nodejs-finalproject\public
+                if (prdObj.image && prdObj.image != '') {
+                    fs.unlinkSync(srcPath + prdObj.image);
+                }
+                fs.unlinkSync(srcPath + prdObj.barcodeImg);
+                // Trả về phản hồi cho client-side
+                return res.json({
+                    status: true,
+                    message: "Delete product successfully",
+                    data: { }
+                });
             }
-          
-              // Trả về phản hồi cho client-side
-              return res.json({
-                status: true,
-                message: "xóa thành công",
-                data: { }
-            });
 
         } catch (error) {
             console.error(error);

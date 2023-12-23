@@ -9,7 +9,7 @@
         <h2 class="pri-color text-center">
             Login
         </h2>
-        <form class='loginForm'>
+        <form class='loginForm' action="/login" method="post">
           <div class="form-group">
             <label for='username' class="text-pri-color">
                 Username
@@ -26,20 +26,31 @@
           <button type='submit' class="btn mt-1 btn-pri-f">Login</button>
           <br />
         </form>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-          <strong class="message">Invalid username or password!</strong> Please try again.
+        {{#if sflash}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong class="message">{{sflash}}</strong> Please try again.
           <span ></span>
           <button type="button" class="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        {{/if}}
       </div>
     </div>
   </div>
 
 </section>
-
-<script src='/js/loginPage.js'></script>
+{{#if sflash}}
+    <span id="errorMessageHid" class="d-none">
+      {{sflash}}
+    </span>
+    <script>
+      $(window).on('load', function () {
+        dialogAlert("Login failed", $("#errorMessageHid").text());
+      });
+    </script>
+{{/if}}
+{{!-- <script src='/js/loginPage.js'></script> --}}
 <script>
   // when website is loaded $(window).on('load', function () { setColorSVG('#footer', "#footer
   $(window).on('load', function () {

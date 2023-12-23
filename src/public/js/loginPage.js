@@ -32,5 +32,7 @@ loginForm.addEventListener('submit', async e => {
     } else {
         console.log(data);
         document.querySelector('.message').innerHTML = data.message;
+        $('.alert').show();
+
     }
 })

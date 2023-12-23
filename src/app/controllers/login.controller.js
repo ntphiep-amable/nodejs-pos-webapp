@@ -5,7 +5,14 @@ const bcrypt = require('bcrypt');
 class LoginController {
     // [GET] /login
     index = async (req, res) => {
-        res.render('pages/login.hbs');
+        if (req.session.user) {
+            if (req.session.role === 'admin') {
+                return res.redirect('/admin');
+            } else {
+                return res.redirect('/employee');
+            }
+        }
+        res.render('pages/login.hbs', { sflash: req.flash('error') });
 
         // add root administrator (admin/admin)
         const adminCheck = await userModel.find({ username: 'admin' });
@@ -20,7 +27,7 @@ class LoginController {
                 avtImage: '',
 
                 isConfirmed: true,
-                isActive: true,
+                isActive: false,
                 isLocked: false,
                 
                 emailConfirmed: true,
@@ -29,15 +36,15 @@ class LoginController {
             });
 
             userModel.create({
-                fullname: 'Nguyen Hiep',
-                username: 'deptrai',
-                email: 'deptrai@gmail.com',
-                password: await bcrypt.hash('nguyenhiep', 10),
-                role: 'admin',
+                fullname: 'John Doe',
+                username: 'johndoe',
+                email: 'johndoe@email.com',
+                password: await bcrypt.hash('johndoe', 10),
+                role: 'employee',
                 avtImage: '',
 
                 isConfirmed: true,
-                isActive: true,
+                isActive: false,
                 isLocked: false,
                 
                 emailConfirmed: true,
@@ -53,64 +60,82 @@ class LoginController {
         try {
             const {username, password} = req.body;
 
-            console.log(req.body);
-
             const userCheck = await userModel.findOne({ username: username });
             if (!userCheck) {
-                console.log('sai username');
-                return res.json({
-                    status: false,
-                    message: "username sai",
-                    data: {},
-                });
+                req.flash('error', 'Incorrect username or password!');
+                return res.redirect('/login');
             };
 
             const isPasswordValid = await bcrypt.compare(password, userCheck.password);
             if (!isPasswordValid) {
-                console.log('sai pass');
-                return res.json({
-                    status: false,
-                    message: "pass sai",
-                    data: {},
-                })
+                // console.log('Incorrect password!');
+                req.flash('error', 'Incorrect username or password!');
+                return res.redirect('/login');
             };
+            
+            if (userCheck.isLocked) {
+                req.flash('error', 'Your account has been locked! Please contact the administrator for more information.');
+                return res.redirect('/login');
+            }
 
             // role check
             if (userCheck.role === 'admin') {
-                console.log('dung la admin roi');
-                const fullname = userCheck.fullname;
-                const role = userCheck.role;
-                return res.json({
-                    status: true,
-                    role: 'admin',
-                    data: {fullname, username, role}
-                })
+                // console.log('Welcome administator!!!');
+                // const fullname = userCheck.fullname;
+                // const role = userCheck.role;
+                // update isActive = true
+                await userModel.updateOne({ 
+                    _id: userCheck._id
+                }, { isActive: true });
+                req.session.user = userCheck;
+                req.session.role = 'admin';
+                return res.redirect('/admin');
             } else {
-                console.log('nhan vien quen');
+                // console.log('Welcome employee!!!');
                 
                 // check if login with link in email
                 if (userCheck.emailConfirmed ) {
-                    console.log('ok employee');
+                    // console.log('Email confirmed');
                     const fullname = userCheck.fullname;
                     const role = userCheck.role;
-                    return res.json({
-                        status: true,
-                        role: 'employee',
-                        data: {fullname, username, role}
-                    });
+                    // update isActive = true
+                    await userModel.updateOne({ 
+                        _id: userCheck._id
+                    }, { isActive: true });
+                    req.session.user = userCheck;
+                    req.session.role = 'employee';
+                    return res.redirect('/employee');
+                    // return res.json({
+                    //     status: true,
+                    //     role: 'employee',
+                    //     data: {fullname, username, role}
+                    // });
 
                 } else {
-                    return res.json({
-                        status: false,
-                        message: "mày là nhân viên mới thì login bằng cái link trong email ấy!",
-                        data: {}
-                    })
+                    req.flash('error', 'Please login by clicking on the link in your email!');
+                    return res.redirect('/login');
+                    // return res.json({
+                    //     status: false,
+                    //     message: "You have not confirmed your email yet!",
+                    //     data: {}
+                    // })
                 }
             }
 
         } catch (error) {
             console.log(error);
         }
+    }
+
+    // [DELETE] /login
+    logout = async (req, res) => {
+        await userModel.updateOne({ _id: req.session.user._id }, { isActive: false });
+        req.session.destroy();
+        res.status(204).json({
+            status: true,
+            message: "Logout successfully!",
+            data: {}
+        });
     }
 }
 

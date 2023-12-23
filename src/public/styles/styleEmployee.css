@@ -1,0 +1,185 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+#avatarposition{
+    margin: 0 auto;
+}
+
+.svgimage {
+    width: 250px;
+    height: 100%;
+    padding: 0;
+    border: 1.3px solid #adb5bd;
+    border-radius: 5px;
+    border-style: groove;
+    margin-bottom: 15px;
+    position: relative;
+}
+.res-row {
+  justify-content: center;
+  align-items: center;
+}
+/* @media screen and (max-width: 768px) {
+    .res-row {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+} */
+
+
+/* CSS */
+.button-8 {
+  background-color: #e1ecf4;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #39739d;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15385;
+  margin: 0;
+  outline: none;
+  padding: 8px .8em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.button-8:hover,
+.button-8:focus {
+  background-color: #b3d3ea;
+  color: #2c5777;
+}
+
+.button-8:focus {
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.button-8:active {
+  background-color: #a0c7e4;
+  box-shadow: none;
+  color: #2c5777;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#avatarposition{
+  margin: 0 auto;
+}
+
+.svgimage {
+  width: 250px;
+  height: 100%;
+  padding: 0;
+  border: 1.3px solid #adb5bd;
+  border-radius: 5px;
+  border-style: groove;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+
+
+
+/* CSS */
+.button-8 {
+background-color: #e1ecf4;
+border-radius: 3px;
+border: 1px solid #7aa7c7;
+box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+box-sizing: border-box;
+color: #39739d;
+cursor: pointer;
+display: inline-block;
+font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+font-size: 13px;
+font-weight: 400;
+line-height: 1.15385;
+margin: 0;
+outline: none;
+padding: 8px .8em;
+position: relative;
+text-align: center;
+text-decoration: none;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+vertical-align: baseline;
+white-space: nowrap;
+position: absolute;
+left: 120px;
+}
+
+.button-8:hover,
+.button-8:focus {
+background-color: #b3d3ea;
+color: #2c5777;
+}
+
+.button-8:focus {
+box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.button-8:active {
+background-color: #a0c7e4;
+box-shadow: none;
+color: #2c5777;
+}
+
+.btn-search {
+  width: 15px;
+  height: 15px;
+}
+
+.order-label {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.order-name {
+  display: flex;
+}
+
+
+.find-product {
+  display: flex;
+  align-items: center;
+}
+
+#cart {
+  position: relative;
+}
+
+.total-product {
+  position: absolute;
+}

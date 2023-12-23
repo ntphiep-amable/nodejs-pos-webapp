@@ -1,71 +1,115 @@
-<h1>admin page</h1><br>
-
-<h2>sửa thông tin sản phẩm</h2> <br>
-
-<form id="updatePrd">
-        <label for="pname">tên sản phẩm</label><br>
-        <input type="text" id="pname" name="pname" required><br>
-
-        <label for="importPrice">giá nhập</label><br>
-        <input type="text" id="importPrice" name="importPrice" required><br>
-
-        <label for="retailPrice">giá bán</label><br>
-        <input type="text" id="retailPrice" name="retailPrice" required><br>
-
-        <label for="category">loại hàng</label><br>
-        <input type="text" id="category" name="category" required><br>
-        
-
-        <label for="imagePrd">upload ảnh</label> <br>  
-        <input type="file" id="imagePrd" name="imagePrd" value=""> <br><br>
-
-
-
-        <br>
-        <button type="submit">lưu</button>
-
-
-</form>
-
-
+<link rel="stylesheet" href="/styles/form.css">
+<style>
+    .pdRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--primary-50-opacity);
+    }
+    .text-dot .pdRow:last-child {
+        border-bottom: none;
+    }
+</style>
+<section id='body-section' class='bg-normal head-bold py-5'>
+    <div class="container">
+        {{!-- List of product --}}
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <h2 class="text-center">
+                        List of <span class="pri-color">Customers</span>
+                    </h2>
+                    <p class="text-center text-sm d-none">
+                        Click on the barcode to view barcode image
+                    </p>
+                    <div class="col-5">
+                    <p class="text-center text-sm text-bold">
+                        Customer information
+                    </p>
+                    <table class="table border">
+                        <tr>
+                            <th>Full name</th>
+                            <td>{{customer.fullname}}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone number</th>
+                            <td>{{customer.phoneNumber}}</td>
+                        </tr>
+                        <tr>
+                            <th>Address</th>
+                            <td>{{customer.address}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total amount</th>
+                            <td id="total-amount"></td>
+                        </tr>
+                    </table>
+                </div>
+                    <div class="form-group search-spec">
+                        <label for="search"><i class="bi bi-search"></i></label>
+                        <input type="text" id="search" class="form-control" placeholder="Search by keyword">
+                    </div>
+                    <table class="table table-striped table-hover mt-2 w-100" id="history">
+                        <thead>
+                        <th scope="col">#</th>
+                        <th scope="col">
+                            Order Date
+                        </th>
+                        <th scope="col">
+                            Products
+                        </th>
+                        <th scope="col">
+                            Subtotal <small>(before VAT)</small>
+                        </th>
+                        </thead>
+                        <tbody>
+                        {{#each orders}}
+                            <tr>
+                            <th scope="row">{{add @index 1}}</th>
+                            <td>{{formatDate orderDate}}</td>
+                            <td class="text-dot">
+                                {{#each products}}
+                                    <div class="pdRow">
+                                        <div>
+                                            {{this.quantity}} x {{this.productName}}
+                                        </div>
+                                        <div>
+                                            {{formatCurrency this.totalOne}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </td>
+                            <td class="text-center">
+                                {{formatCurrency totalAll}}
+                            </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{!-- end of list of product --}}
+    </div>
+</section>
 
 <script>
-    document.getElementById('pname').value = localStorage.getItem('name');
-    document.getElementById('importPrice').value = localStorage.getItem('imp');
-    document.getElementById('retailPrice').value = localStorage.getItem('ret');
-    document.getElementById('category').value = localStorage.getItem('cat');
-
-    localStorage.removeItem('name');
-    localStorage.removeItem('imp');
-    localStorage.removeItem('ret');
-    localStorage.removeItem('cat');
-    // code rất ngu, người đọc thông cảm
-
-   
-
-
-    document.querySelector("#updatePrd").addEventListener('submit', async e => {
-        e.preventDefault();
-
-        const pname = document.querySelector("#pname").value;
-        const importPrice = document.querySelector("#importPrice").value;
-        const retailPrice = document.querySelector("#retailPrice").value;
-        const category = document.querySelector("#category").value;
-        const _id = localStorage.getItem('_id');
-
-        localStorage.removeItem('_id');
-
-        const response = await fetch("/admin/products/update", {
-            method: "post",
-            headers: { "Content-Type": "application/json" },
-            body : JSON.stringify({_id, pname, importPrice, retailPrice, category}),
-        });
-
-        const data = await response.json();
-        if (data.status) {
-            window.location.href = "/admin/products";
+    $(window).on('load', function() {
+        const formatCurrency = (number) => {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number);
         }
-    })
+        var total = 0;
+        $("table#history tbody tr").each(function() {
+            var amount = $(this).find("td:last-child").text().replace(/[$,]/g, '');
+            total += parseFloat(amount);
+        });
+        $("#total-amount").text(formatCurrency(total));
 
-    
+    $(".search-spec input").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("table tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
 </script>
